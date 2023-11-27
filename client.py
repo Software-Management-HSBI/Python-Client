@@ -9,6 +9,7 @@ class SocketIOClient:
 
         self.sio.on('connection_success', self.connection_succes)
     
+
     def connection_succes(self):
         print("Connection established")
 
