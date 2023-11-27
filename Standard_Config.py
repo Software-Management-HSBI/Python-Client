@@ -1,8 +1,12 @@
+import pygame
+
 fps = 60
 step = 1/fps
 width = 1024
 height = 768
 segments = []
+screen = pygame.display.set_mode((width, height))
+ctx = screen
 background = None
 sprites = None
 resolution = None
