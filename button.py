@@ -1,15 +1,13 @@
 import pygame
+import sys
+
+pygame.init()
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
 
 
-screen = pygame.display.set_mode((window_width, window_height))
-pygame.display.set_caption("Super toller Racer")
-font = pygame.font.Font(None, 18)
-
-background_image = pygame.image.load("assets/BetterCallSus.jpg")
 
 class Button:
     def __init__(self, x, y, width, height, text, font_size=20, inactive_color=GRAY, active_color=WHITE):
@@ -43,3 +41,32 @@ class Button:
         else:
             self.current_color = self.inactive_color
             self.is_hovered = False
+
+def main():
+    # Fensterkonfiguration
+    width, height = 800, 600
+    screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("Button mit Pygame")
+
+    # Button erstellen
+    button = Button(300, 250, 200, 50, "Klick mich!")
+
+    # Haupt-Event-Schleife
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            button.handle_event(event)
+
+        # Hintergrund zeichnen
+        screen.fill(BLACK)
+
+        # Button zeichnen
+        button.draw(screen)
+
+        # Bildschirm aktualisieren
+        pygame.display.flip()
+
+if __name__ == "__main__":
+    main()

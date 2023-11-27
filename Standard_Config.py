@@ -22,6 +22,11 @@ speed = 0
 maxSpeed = segmentLength/step
 accel = maxSpeed/5
 breaking = -maxSpeed
-decel = -maxspeed/5
+decel = -maxSpeed/5
 offRoadDecel = -maxSpeed/2
 offRoadLimit = maxSpeed/4
+
+keyLeft = False
+keyRight = False
+keyFaster = False
+keySlower = False
