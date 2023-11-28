@@ -121,13 +121,13 @@ class Game:
                         self.keySlower = False
 
             self.render()
-            self.update()
+            self.update(self.step)
             pygame.display.update()
 
-    def update(self):
-        self.position = Util.increase(self.position, self.speed * self.dt, self.trackLength)
+    def update(self, dt):
+        self.position = Util.increase(self.position, dt * self.speed, self.trackLength)
 
-        tilt = self.dt * 2 * (self.speed / self.maxSpeed)
+        tilt = dt * 2 * (self.speed / self.maxSpeed)
 
         if self.keyLeft:
             self.playerX = self.playerX - tilt
@@ -197,6 +197,8 @@ class Game:
             )
         self.segments[self.which_segment(self.playerZ)["index"] + 2]["color"] = get_start()
         self.segments[self.which_segment(self.playerZ)["index"] + 3]["color"] = get_start()
+
+        self.trackLength = len(self.segments) * self.segmentLength
         
     def which_road(self, n):
          if (n / self.rumbleLenght) % 2 == 0:
