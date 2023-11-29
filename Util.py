@@ -1,8 +1,10 @@
 import math
 import pygame
 
+# Die Util-Klasse besitzt hauptsaechlich die Mathematik hinter dem Spiel
 class Util:
 
+    # Increase veraendert die Position des Spielers abhaengig von seiner Geschwindigkeit
     @staticmethod
     def increase(start, increment, maximum):
 
@@ -13,14 +15,17 @@ class Util:
             result += maximum
         return result
 
+    # Beschleunigt das Auto abhaengig von der accel-Klassenvariable des Spiels
     @staticmethod
     def accelerate(v, accel, dt):
         return v + (accel * dt)
 
+    # Gibt ein Limit eines Wertes an
     @staticmethod
     def limit(value, minimum, maximum):
         return max(minimum, min(value, maximum))
 
+    # Methode aus dem JavaScript, um die Kamera zu bewegen (?)
     @staticmethod
     def project(p, camx, camy, camz, camdepth, width, height, roadwidth):
         worldx = Util._if_none(p.get("world").get("x"))
@@ -56,19 +61,20 @@ class Util:
         else:
             return value
 
+    # Methode aus dem JavaScript, die die einzelnen Strassenteile modelliert und den Nebel hinzufuegt
     @staticmethod
     def segment(screen, width, lanes, x1, y1, w1, x2, y2, w2, color, fog):
-        r1 = Util._rumble_width(w1, lanes)
-        r2 = Util._rumble_width(w2, lanes)
-        l1 = Util._lane_marker_width(w1, lanes)
-        l2 = Util._lane_marker_width(w2, lanes)
+        r1 = Util.rumble_width(w1, lanes)
+        r2 = Util.rumble_width(w2, lanes)
+        l1 = Util.lane_marker_width(w1, lanes)
+        l2 = Util.lane_marker_width(w2, lanes)
         lane = 1
 
         Util.gras(screen, color.get("grass"), 0, y2, width, y1 - y2)
 
-        Util._polygon(screen, x1 - w1 - r1, y1, x1 - w1, y1, x2 - w2, y2, x2 - w2 - r2, y2, color.get("rumble"))
-        Util._polygon(screen, x1 + w1 + r1, y1, x1 + w1, y1, x2 + w2, y2, x2 + w2 + r2, y2, color.get("rumble"))
-        Util._polygon(screen, x1 - w1, y1, x1 + w1, y1, x2 + w2, y2, x2 - w2, y2, color.get("road"))
+        Util.polygon(screen, x1 - w1 - r1, y1, x1 - w1, y1, x2 - w2, y2, x2 - w2 - r2, y2, color.get("rumble"))
+        Util.polygon(screen, x1 + w1 + r1, y1, x1 + w1, y1, x2 + w2, y2, x2 + w2 + r2, y2, color.get("rumble"))
+        Util.polygon(screen, x1 - w1, y1, x1 + w1, y1, x2 + w2, y2, x2 - w2, y2, color.get("road"))
 
         lanew1 = w1 * 2 / lanes
         lanew2 = w2 * 2 / lanes
@@ -76,7 +82,7 @@ class Util:
         lanex2 = x2 - w2 + lanew2
 
         while lane < lanes:
-            Util._polygon(screen, lanex1 - l1 / 2, y1, lanex1 + l1 / 2, y1, lanex2 + l2 / 2, y2, lanex2 - l2 / 2,
+            Util.polygon(screen, lanex1 - l1 / 2, y1, lanex1 + l1 / 2, y1, lanex2 + l2 / 2, y2, lanex2 - l2 / 2,
                           y2,
                           color.get("lane"))
             lanex1 += lanew1
@@ -85,12 +91,14 @@ class Util:
 
         Util.fog(screen, 0, y1, width, y1-y2, fog)
 
+    # Etwas umformulierte Variante des JavaSript-Nebels, nutzt eine Methode namens 'draw_polygon_alpha', um den Nebel richtig darzustellen
     @staticmethod
     def fog(screen, x, y, width, height, fog):
         if fog < 1:
             Util.draw_polygon_alpha(screen, (0, 81, 8, int((1 - fog) * 255)),
                                     [(x, y - 1), (x + width, y - 1), (x + width, y + height), (x, y + height)])
 
+    # Hilfsmethode fuer den Nebel
     @staticmethod
     def draw_polygon_alpha(surface, color, points):
         lx, ly = zip(*points)
@@ -106,15 +114,15 @@ class Util:
         pygame.draw.polygon(screen, color, [(x, y), (x + width, y), (x + width, y + height), (x, y + height)])
 
     @staticmethod
-    def _rumble_width(projectedroadwidth, lanes):
+    def rumble_width(projectedroadwidth, lanes):
         return projectedroadwidth / max(6, 2 * lanes)
 
     @staticmethod
-    def _lane_marker_width(projectedroadwidth, lanes):
+    def lane_marker_width(projectedroadwidth, lanes):
         return projectedroadwidth / max(32, 8 * lanes)
 
     @staticmethod
-    def _polygon(screen, x1, y1, x2, y2, x3, y3, x4, y4, color):
+    def polygon(screen, x1, y1, x2, y2, x3, y3, x4, y4, color):
         pygame.draw.polygon(screen, color, [(x1, y1), (x2, y2), (x3, y3), (x4, y4)])
 
     @staticmethod

@@ -8,7 +8,8 @@ BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
 
 
-
+# Klasse fuer einen Knopf, ueber den gehovert werden kann.
+# TODO: Muss noch fuer das Nutzen im Menu angepasst werden
 class Button:
     def __init__(self, x, y, width, height, text, font_size=20, inactive_color=GRAY, active_color=WHITE):
         self.rect = pygame.Rect(x, y, width, height)
@@ -32,7 +33,7 @@ class Button:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1 and self.is_hovered:
                 # Hier kannst du deine Aktion für den Button-Klick einfügen
-                print("Button wurde geklickt!")
+                return True
 
     def check_hover(self, mouse_pos):
         if self.rect.collidepoint(mouse_pos):
@@ -42,6 +43,7 @@ class Button:
             self.current_color = self.inactive_color
             self.is_hovered = False
 
+# Testmethode, um zu gucken, ob der Button an sich funktioniert
 def main():
     # Fensterkonfiguration
     width, height = 800, 600

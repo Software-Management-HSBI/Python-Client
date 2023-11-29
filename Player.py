@@ -1,5 +1,6 @@
 import pygame
 
+# Hilfsklasse, um dem Spieler-Auto die richtigen Bilder zum richtigen Zeitpunkt zuzuweisen
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()

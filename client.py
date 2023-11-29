@@ -1,23 +1,12 @@
 import socketio
 
-
-class SocketIOClient:
+# Client fuer die Socket.io-Verbindung. Muss erweitert werden
+class Client:
     def __init__(self):
         self.server_address = ""
+        self.sio = socketio.Client(logger = True)
 
-        self.sio = socketio.Client(logger=True)
+        self.sio.on('connection_successful', self.on_connection_success)
 
-        self.sio.on('connection_success', self.connection_succes)
-    
-
-    def connection_succes(self):
+    def on_connection_success(self):
         print("Connection established")
-
-
-    def connect(self):
-        try:
-            self.sio.connect()
-        except ConnectionError:
-            print("Couldn't connect")
-
-

@@ -42,7 +42,7 @@ def get_dark():
             "lane": "#696969"
         }
         return c
-
+# Der Teil des Singleplayers, der alle anderen aktiviert: Hier werden Tasteneingaben überprüft und die Straße unendlich erweitert
 class Game:
 
     fps = 60
@@ -55,11 +55,13 @@ class Game:
     background = None
     sprites = None
     resolution = None
-    roadWidth = 2000
+    # roadWidth bestimmt, wie breit die gesamte Strasse (alle Spuren) sein soll
+    roadWidth = 4000
     segmentLength = 200
     rumbleLenght = 3
     trackLength = 0
-    lanes = 3
+    # lanes bestimmt, wie viele Spuren es auf der Straße geben soll (je breiter die Straße, desto mehr Spuren können realistisch genutzt werden)
+    lanes = 8
     fov = 100
     cameraHeight = 1000
     cameraDepth = 1 / math.tan((fov / 2) * math.pi / 180)
@@ -81,6 +83,7 @@ class Game:
     keyFaster = False
     keySlower = False
 
+    # Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
@@ -89,14 +92,15 @@ class Game:
         self.reset_road()
         self.game_loop()
 
+    # Loop des Spiels: Erstellt Spieler und Hintergrund, nimmt Inputs entgegen und ruft permanent die render- und update-Methode auf
     def game_loop(self):
         self.create_player()
         self.create_background()
         self.background_sprites.draw(self.screen)
-        print("Background da")
+
 
         while True:
-
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -124,6 +128,7 @@ class Game:
             self.update(self.step)
             pygame.display.update()
 
+    # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
     def update(self, dt):
         self.position = Util.increase(self.position, dt * self.speed, self.trackLength)
 
@@ -153,6 +158,8 @@ class Game:
         self.playerX = Util.limit(self.playerX, -2, 2)
         self.speed = Util.limit(self.speed, 0, self.maxSpeed)
 
+    # Segmentiert die Straße, sieht sehr komisch aus, funktioniert aber (so ziemlich wie das vom JavaScript)
+    # Wenn man hier was aendern muss, viel Glueck!
     def reset_road(self):
         for n in range(500):
             self.segments.append(
@@ -200,15 +207,18 @@ class Game:
 
         self.trackLength = len(self.segments) * self.segmentLength
         
+    # Hilfsmethode, um zu gucken, welche Farbe das aktuelle Strassenstueck haben muss
     def which_road(self, n):
          if (n / self.rumbleLenght) % 2 == 0:
               return get_light()
          else:
               return get_dark()
 
+    # Hilfsmethode, um das derzeit notwendige Segment auszuwaehlen
     def which_segment(self, n):
          return self.segments[math.floor(n / self.segmentLength) % len(self.segments)]
     
+    # Setzt ab einem bestimmten Punkt die Distanz der Strecke zurueck (?) und zeichnet Strecke, Nebel und Spieler auf den Bildschirm
     def render(self):
          base = self.which_segment(self.position)
          maxY = self.height
@@ -258,6 +268,7 @@ class Game:
 
             self.player_sprites.draw(self.screen)   
 
+    # Erstellt mit einer Hilfsklasse die einzelnen Hintergrundschichten
     def create_background(self):
         surface_sky = Background(0, pygame.image.load("assets/sky.png"))
         surface_hills = Background(0, pygame.image.load("assets/hills.png"))
@@ -267,6 +278,7 @@ class Game:
         self.background_sprites.add(surface_hills)
         self.background_sprites.add(surface_trees)
 
+    # Platziert den Spieler in der Mitte der Strecke und ordnet ihm die Auto-Sprites zu
     def create_player(self):
         self.player = Player(self.screen.get_width() / 2 - 30, self.screen.get_height() - 100)
         self.player_sprites.add(self.player)
