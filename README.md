@@ -1,4 +1,6 @@
 # Python-Client
 Racinggame-client in Python
 
-# TODO: Aus common.js UTIL, GAME, und RENDER als einzelne Dateien machen
+# Bis jetzt erreicht: Grundprinzip des Spiels (startet man in "Start.py")
+# TODO: Startmenu und Client-Integration
+# Aktuell: Entwicklung von Kurven
