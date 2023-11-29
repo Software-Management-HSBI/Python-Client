@@ -1,9 +1,9 @@
 import pygame
 import Background
 
-from Client import Client
+from client import Client
 from Standard_Config import Game
-from Button import Button
+from button import Button
 
 pygame.init()
 
