@@ -1,6 +1,8 @@
 # Python-Client
-Racinggame-client in Python
+Racinggame-Client in Python
 
-# Bis jetzt erreicht: Grundprinzip des Spiels (startet man in "Start.py")
-# TODO: Startmenu und Client-Integration
-# Aktuell: Entwicklung von Kurven
+# Bis jetzt erreicht
+V3 des JavaScript-Racers
+
+# TODO
+V4 fertigstellen und Multiplayer integrieren
