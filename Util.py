@@ -153,3 +153,23 @@ class Util:
             hill = pygame.transform.scale(img, (dest_w, dest_h))
             hill = pygame.transform.chop(hill, (0, hill.get_height()-(hill.get_height()*clip_h/dest_h), 0, sprite.get("height")))
             screen.blit(hill, [destX, destY])
+
+    @staticmethod
+    def easeIn(a, b, percent):
+        return a + (b-a) * math.pow(percent, 2)
+    
+    @staticmethod
+    def easeOut(a, b, percent):
+        return a + (b-a) * (1- math.pow(1-percent, 2))
+    
+    @staticmethod
+    def easeInOut(a, b, percent):
+        return a + (b-a) * ((-math.cos(percent*math.pi)/2)+0.5)
+    
+    @staticmethod
+    def percent_remaining(n, total):
+        return (n % total) / total
+    
+    @staticmethod
+    def interpolate(a, b, percent):
+        return a + (b-a) * percent
