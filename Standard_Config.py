@@ -45,9 +45,10 @@ def get_dark():
 # Der Teil des Singleplayers, der alle anderen aktiviert: Hier werden Tasteneingaben überprüft und die Straße unendlich erweitert
 class Game:
 
-    fps = 60
-    step = 1/fps
-    dt = 1/30
+    # Sowohl in Python als auch in JavaScript sorgt das Veraedern der FPS fuer Probleme beim Spielverhalten
+    FPS = 60
+    step = 1/FPS
+    dt = 1/FPS/2
     width = 1024
     height = 768
     segments = []
