@@ -154,6 +154,8 @@ class Util:
             hill = pygame.transform.chop(hill, (0, hill.get_height()-(hill.get_height()*clip_h/dest_h), 0, sprite.get("height")))
             screen.blit(hill, [destX, destY])
 
+    # Alle 3 ease-Methoden sind fuer die Kurvenmodellierung
+
     @staticmethod
     def easeIn(a, b, percent):
         return a + (b-a) * math.pow(percent, 2)
@@ -165,6 +167,8 @@ class Util:
     @staticmethod
     def easeInOut(a, b, percent):
         return a + (b-a) * ((-math.cos(percent*math.pi)/2)+0.5)
+    
+        
     
     @staticmethod
     def percent_remaining(n, total):

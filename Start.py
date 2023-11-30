@@ -1,3 +1,3 @@
-from Standard_Config import Game
+from Gamefiles.game import Game
 
 Game()

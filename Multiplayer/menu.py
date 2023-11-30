@@ -1,9 +1,9 @@
 import pygame
-import Background
 
-from client import Client
-from Standard_Config import Game
-from button import Button
+from Visuals.background import Background
+from Multiplayer.client import Client
+from Gamefiles.game import Game
+from Multiplayer.button import Button
 
 pygame.init()
 
