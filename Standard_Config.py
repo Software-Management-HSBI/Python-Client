@@ -57,12 +57,12 @@ class Game:
     sprites = None
     resolution = None
     # roadWidth bestimmt, wie breit die gesamte Strasse (alle Spuren) sein soll
-    roadWidth = 4000
+    roadWidth = 2000
     segmentLength = 200
     rumbleLenght = 3
     trackLength = 0
     # lanes bestimmt, wie viele Spuren es auf der Straße geben soll (je breiter die Straße, desto mehr Spuren können realistisch genutzt werden)
-    lanes = 8
+    lanes = 3
     fov = 100
     cameraHeight = 1000
     cameraDepth = 1 / math.tan((fov / 2) * math.pi / 180)
@@ -78,6 +78,8 @@ class Game:
     decel = -maxSpeed/5
     offRoadDecel = -maxSpeed/2
     offRoadLimit = maxSpeed/4
+    centrifugal = 0.3
+    cars = []
 
     keyLeft = False
     keyRight = False
@@ -132,6 +134,7 @@ class Game:
     # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
     def update(self, dt):
         self.position = Util.increase(self.position, dt * self.speed, self.trackLength)
+        current_segment = self.which_segment(self.position + self.playerZ)
 
         tilt = dt * 2 * (self.speed / self.maxSpeed)
 
@@ -146,6 +149,8 @@ class Game:
         else:
             self.player.drive_straight()
 
+        self.playerX -= tilt * (self.speed / self.maxSpeed) * current_segment.get("curve") * self.centrifugal
+
         if self.keyFaster:
             self.speed = Util.accelerate(self.speed, self.accel, self.dt)
         elif self.keySlower:
@@ -158,6 +163,10 @@ class Game:
 
         self.playerX = Util.limit(self.playerX, -2, 2)
         self.speed = Util.limit(self.speed, 0, self.maxSpeed)
+
+        playerW = ((1/80) * 0.3) * 80
+
+        self.update_cars(dt, current_segment, playerW)
 
     # Segmentiert die Straße, sieht sehr komisch aus, funktioniert aber (so ziemlich wie das vom JavaScript)
     # Wenn man hier was aendern muss, viel Glueck!

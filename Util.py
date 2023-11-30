@@ -128,3 +128,28 @@ class Util:
     @staticmethod
     def exponential_fog(distance, density):
         return 1 / (math.pow(math.e, (distance * distance * density)))
+
+    # Aus dem JavaScript-Code, ist wahrscheinlich fuer das Darstellen von Huegeln und Sprites generell da (?)
+    @staticmethod
+    def sprite(screen: pygame.Surface, width, road_width, sprite, sprite_scale, destX, destY, offset_x, offset_y, clip_y):
+        dest_w = (sprite.get("width") * sprite_scale * width / 2) * (((1/80) * 0.3) * road_width)
+        dest_h = (sprite.get("height") * sprite_scale * width / 2) * (((1/80) * 0.3) * road_width)
+
+        if offset_x is None:
+            offset_x = 0
+        if offset_y is None:
+            offset_y = 0
+
+        destX += dest_w * offset_x
+        destY += dest_h * offset_y
+
+        if clip_y is None:
+            clip_h = 0
+        else:
+            clip_h = max(0, destY + dest_h - clip_y)
+
+        if clip_h < dest_h:
+            img = pygame.image.load(sprite.get("asset")).convert()
+            hill = pygame.transform.scale(img, (dest_w, dest_h))
+            hill = pygame.transform.chop(hill, (0, hill.get_height()-(hill.get_height()*clip_h/dest_h), 0, sprite.get("height")))
+            screen.blit(hill, [destX, destY])
