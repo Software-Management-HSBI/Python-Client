@@ -14,21 +14,18 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x - self.rect.width, y - self.rect.height)
 
-    
+
     def drive_straight(self):
         self.image = self.straight
         self.scale()
-
 
     def drive_right(self):
         self.image = self.right
         self.scale()
 
-
     def drive_left(self):
         self.image = self.left
         self.scale()
 
-    
     def scale(self):
         self.image = pygame.transform.scale_by(self.image, 4)
