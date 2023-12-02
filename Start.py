@@ -1,3 +1,3 @@
-from Gamefiles.game import Game
+from Multiplayer.menu import Menu
 
-Game()
+Menu()

@@ -1,52 +1,65 @@
 import pygame
+import sys
 
-from Visuals.background import Background
 from Multiplayer.client import Client
 from Gamefiles.game import Game
 from Multiplayer.button import Button
+from Visuals.colors import Colors
 
 pygame.init()
-
 client = Client()
+
+def start_game():
+    Game()
+
+def options():
+    pass
+
+def multiplayer():
+    pass
 
 width = 1024
 height = 768
 title = "Wakaliwood Gaming"
 
+start_Button = Button(400, 75, 200, 50, "Start", color=Colors.GREEN, action=start_game)
+options_Button = Button(400, 375, 200, 50, "Optionen", color=Colors.YELLOW, action=options)
+multiplayer_Button = Button(400, 675, 200, 50, "Mehrspieler", color=Colors.BLUE, action=multiplayer)
+
+buttons = [start_Button, options_Button, multiplayer_Button]
+
 # TODO: Hier soll das Menu implementiert werden, also verschiedene Knoepfe fuer Singleplayer, Multiplayer, Einstellungen etc.
 class Menu:
+
+    background_image = pygame.image.load("assets/racer.jpg")
+
     def __init__(self):
         self.screen = pygame.display.set_mode([width, height])
         pygame.display.set_caption(title)
+        self.menu_loop()
 
     # Hier soll ueberprueft werden, ob ein neuer Modus ausgewaehlt wurde. Default ist immer das Main-Menu
     def menu_loop(self):
 
-        self.current_mode = "main"
-        loop = True
-        while loop:
+        while True:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    loop = False
-                    
-            if self.current_mode == "main":
-                self.draw_menu()
-            elif self.current_mode == "single":
-                Game()
-            pygame.display.update()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        for button in buttons:
+                            if button.rect.collidepoint(event.pos):
+                                if button.action:
+                                    button.action()
 
-    # Soll das Startmenu zeichnen und einen Knopf fuer das Starten vom Singleplayer besitzen
-    # TODO: Hier muessen dann noch die anderen Knoepfe fuer die verschiedenen Modi hin
-    def draw_menu(self):
-        Background.init_background(self.screen)
 
-        start_button = Button(200, 150, 100, 50, "Singleplayer starten")
-        button_check = True
-        while button_check:
-            for event in pygame.event.get():
-                start_button.handle_event(event)
-            
-            start_button.draw(self.screen)
+            self.screen.blit(self.background_image, (0, 0))
+
+            for button in buttons:
+                button.draw(self.screen)
+
+            pygame.display.flip()
+
 
 
