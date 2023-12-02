@@ -9,9 +9,12 @@ from Visuals.colors import Colors
 pygame.init()
 client = Client()
 
+# In diesen Methoden werden unsere Aufrufe fuer die verschiedenen Modi aufgerufen, sie sind die Aktionen der Buttons
+# TODO: Das ist alles noch etwas Spaghetti-Code-Artig, irgendwie refactoren.
 def start_game():
     Game()
 
+# TODO: Bis jetzt ist nur der Singleplayer-Button nutzbar, weil wir noch keine andere Modi haben, d. h. hier dann aktualisieren
 def options():
     pass
 

@@ -1,12 +1,9 @@
 import pygame
-import sys
 from Visuals.colors import Colors
 
 pygame.init()
 
-
-# Klasse fuer einen Knopf, ueber den gehovert werden kann.
-# TODO: Muss noch fuer das Nutzen im Menu angepasst werden
+# Klasse fuer einen Knopf, der im Menu verwendet wird. Hat vorerst leider kein Hovern mehr drin, vielleicht spater nochmal hinzufuegen
 class Button:
     def __init__(self, x, y, width, height, text, font_size=20, color=Colors.WHITE, action=None):
         self.rect = pygame.Rect(x, y, width, height)
