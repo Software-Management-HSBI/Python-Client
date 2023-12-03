@@ -121,6 +121,7 @@ class Game:
 
             self.render()
             self.update(self.STEP)
+            self.clock.tick(self.FPS)
             pygame.display.update()
 
     # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
@@ -170,6 +171,7 @@ class Game:
                     self.best_lap_time = self.last_lap_time
 
                 self.current_lap_time = 0
+                # TODO: Timer fängt an, sobald start.py aufgerufen wird. Nicht gewollt
                 self.lap_start_time = pygame.time.get_ticks()
             # Laesst die Zeit weiterlaufen. Hier koennte man wahrscheinlich besser mit time.time() arbeiten
             else:
