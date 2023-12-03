@@ -77,6 +77,8 @@ class Game:
     last_lap_time = 0
     best_lap_time = float('inf')
     font = pygame.font.SysFont(None, 36)
+    clock = pygame.time.Clock()
+    lap_start_ticks = 0
 
     # Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel
     def __init__(self):
@@ -168,19 +170,20 @@ class Game:
                     self.best_lap_time = self.last_lap_time
 
                 self.current_lap_time = 0
+                self.lap_start_time = pygame.time.get_ticks()
             # Laesst die Zeit weiterlaufen. Hier koennte man wahrscheinlich besser mit time.time() arbeiten
             else:
-                self.current_lap_time += dt / 2.5
+                self.current_lap_time = (pygame.time.get_ticks() - self.lap_start_ticks) / 1000.0
         
         self.update_time(self.current_lap_time, self.last_lap_time, self.best_lap_time)
 
     # Zeigt aktuelle, letzte und beste Zeit an
     def update_time(self, current_lap_time, last_lap_time, best_lap_time):
-        best_time_text = self.font.render(f"Noch keine Runde gefahren", True, Colors.GREEN)
+        best_time_text = self.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
         timer_text = self.font.render(f"Aktuelle Runde: {int(current_lap_time)} Sekunden", True, Colors.BLACK)
         last_time_text = self.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
         if not math.isinf(self.best_lap_time):
-            best_time_text = self.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.GREEN)
+            best_time_text = self.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)
         self.screen.blit(timer_text, (10, 10))
         self.screen.blit(last_time_text, (10, 50))
         self.screen.blit(best_time_text, (10, 90))
