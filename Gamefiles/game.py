@@ -10,6 +10,9 @@ from Visuals.road import Road
 from Visuals.colors import Colors
 
 # Hiermit bildet man die Strasse. Es wird wahrscheinlich wichtig sein, dass dieses Array genauso auch beim Java-Client aufgebaut ist.
+# 1. Variable ist Strassenlaenge, die kann man so einstellen wie man will, passt
+# 2. Variable gibt an, wie scharf eine Kurve ist, alle Werte davon muessen am Ende 0 ergeben
+# 3. Variable gibt an, wie steil ein Huegel ist, alle Werte davon muessen am Ende 0 ergeben
 # TODO: Gemeinsame Speicherloesung finden
 road = [
     [100, 0, 60],
@@ -17,7 +20,10 @@ road = [
     [100, 0, -60],
     [90, 4],
     [50],
-    [90, -4]
+    [90, -4],
+    [75, 3, 40],
+    [25]
+    [100, -3, -40]
 ]
 
 # Der Teil des Singleplayers, der alle anderen aktiviert: Hier werden Tasteneingaben überprüft und die Straße unendlich erweitert
@@ -77,8 +83,7 @@ class Game:
     last_lap_time = 0
     best_lap_time = float('inf')
     font = pygame.font.SysFont(None, 36)
-    clock = pygame.time.Clock()
-    lap_start_ticks = 0
+    lap_start_time = 0
 
     # Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel
     def __init__(self):
@@ -86,6 +91,7 @@ class Game:
         pygame.display.set_caption("Singleplayer")
         self.player_sprites = pygame.sprite.Group()
         self.background_sprites = pygame.sprite.Group()
+        self.lap_start_time = time.time()
         self.reset_road()
         self.game_loop()
 
@@ -121,7 +127,6 @@ class Game:
 
             self.render()
             self.update(self.STEP)
-            self.clock.tick(self.FPS)
             pygame.display.update()
 
     # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
@@ -166,17 +171,17 @@ class Game:
         if self.position > self.playerZ:
             if self.current_lap_time and (start_position < self.playerZ):
                 self.last_lap_time = self.current_lap_time
+                self.current_lap_time = 0
+
+                self.lap_start_time = time.time()
                 # Checkt nach Bestzeit
                 if self.last_lap_time < self.best_lap_time:
                     self.best_lap_time = self.last_lap_time
-
-                self.current_lap_time = 0
-                # TODO: Timer fängt an, sobald start.py aufgerufen wird. Nicht gewollt
-                self.lap_start_time = pygame.time.get_ticks()
-            # Laesst die Zeit weiterlaufen. Hier koennte man wahrscheinlich besser mit time.time() arbeiten
             else:
-                self.current_lap_time = (pygame.time.get_ticks() - self.lap_start_ticks) / 1000.0
-        
+                # Laesst die Zeit weiterlaufen.
+                current_time = time.time()
+                self.current_lap_time = current_time - self.lap_start_time
+
         self.update_time(self.current_lap_time, self.last_lap_time, self.best_lap_time)
 
     # Zeigt aktuelle, letzte und beste Zeit an
