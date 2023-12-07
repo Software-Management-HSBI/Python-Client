@@ -2,23 +2,6 @@ import globals as gl
 from Gamefiles.util import Util
 from Visuals.colors import Colors
 
-# Hiermit bildet man die Strasse. Es wird wahrscheinlich wichtig sein, dass dieses Array genauso auch beim Java-Client aufgebaut ist.
-# 1. Variable ist Strassenlaenge, die kann man so einstellen wie man will, passt
-# 2. Variable gibt an, wie scharf eine Kurve ist, alle Werte davon muessen am Ende 0 ergeben
-# 3. Variable gibt an, wie steil ein Huegel ist, alle Werte davon muessen am Ende 0 ergeben
-# TODO: Gemeinsame Speicherloesung finden
-road = [
-    [100, 0, 60],
-    [50],
-    [100, 0, -60],
-    [90, 4],
-    [50],
-    [90, -4],
-    [75, 3, 40],
-    [25],
-    [100, -3, -40]
-]
-
 class Road:
     
     # Liest das Strassen-Array aus und markiert Start-/Ziellinie
@@ -129,7 +112,7 @@ class Road:
     # Liest das Strassen-Array aus und entscheidet je nach Menge an Werten, ob Kurven oder Huegel zum Segment gehoeren
     @staticmethod
     def read_road():
-        for x in road:
+        for x in gl.road:
             if len(x) == 1:
                 Road.add_street(x[0])
             elif len(x) == 2:
