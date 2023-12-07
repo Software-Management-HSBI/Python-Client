@@ -1,6 +1,8 @@
 import math
 import pygame
 
+import globals as gl
+
 # Die Util-Klasse besitzt hauptsaechlich die Mathematik hinter dem Spiel
 class Util:
 
@@ -60,6 +62,11 @@ class Util:
             return 1
         else:
             return value
+        
+    # Hilfsmethode, um das derzeit notwendige Segment auszuwaehlen
+    @staticmethod
+    def which_segment(n):
+         return gl.segments[math.floor(n / gl.segmentLength) % len(gl.segments)]
 
     # Methode aus dem JavaScript, die die einzelnen Strassenteile modelliert und den Nebel hinzufuegt
     @staticmethod
@@ -177,3 +184,4 @@ class Util:
     @staticmethod
     def interpolate(a, b, percent):
         return a + (b-a) * percent
+    

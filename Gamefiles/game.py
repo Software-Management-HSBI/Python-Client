@@ -83,7 +83,7 @@ class Game:
         start_position = gl.position
 
         gl.position = Util.increase(gl.position, dt * gl.speed, gl.trackLength)
-        current_segment = self.which_segment(gl.position + gl.playerZ)
+        current_segment = Util.which_segment(gl.position + gl.playerZ)
 
         tilt = dt * 2 * (gl.speed / gl.maxSpeed)
 
@@ -149,8 +149,8 @@ class Game:
 
         self.read_road()
 
-        gl.segments[self.which_segment(gl.playerZ)["index"] + 2]["color"] = Colors.get_start()
-        gl.segments[self.which_segment(gl.playerZ)["index"] + 3]["color"] = Colors.get_start()
+        gl.segments[Util.which_segment(gl.playerZ)["index"] + 2]["color"] = Colors.get_start()
+        gl.segments[Util.which_segment(gl.playerZ)["index"] + 3]["color"] = Colors.get_start()
         for n in range(gl.rumbleLength):
             gl.segments[len(gl.segments)-1-n]["color"] = Colors.get_finish()
 
@@ -243,15 +243,13 @@ class Game:
          else:
               return Colors.get_dark()
 
-    # Hilfsmethode, um das derzeit notwendige Segment auszuwaehlen
-    def which_segment(self, n):
-         return gl.segments[math.floor(n / gl.segmentLength) % len(gl.segments)]
+
     
     # Setzt ab einem bestimmten Punkt die Distanz der Strecke zurueck (?) und zeichnet Strecke, Nebel und Spieler auf den Bildschirm
     def render(self):
-        base = self.which_segment(gl.position)
+        base = Util.which_segment(gl.position)
         base_percent = Util.percent_remaining(gl.position, gl.segmentLength)
-        current_segment = self.which_segment(gl.position + gl.playerZ)
+        current_segment = Util.which_segment(gl.position + gl.playerZ)
         current_percent = Util.percent_remaining(gl.position + gl.playerZ, gl.segmentLength)
         playerY = Util.interpolate(current_segment.get("p1").get("world").get("y"), current_segment.get("p2").get("world").get("y"), current_percent)
 
