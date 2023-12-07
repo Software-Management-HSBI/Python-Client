@@ -1,10 +1,8 @@
 import pygame
-import math
 import sys
 import time
 
 from Gamefiles.util import Util
-from Visuals.colors import Colors
 from Visuals.render import Render
 from Visuals.roadCreation import Road
 from Visuals.spriteCreation import Sprites
@@ -93,22 +91,7 @@ class Game:
         gl.playerX = Util.limit(gl.playerX, -2, 2)
         gl.speed = Util.limit(gl.speed, 0, gl.maxSpeed)
 
-        # Das alles hier ist die Lap-Berechnung, ich hab versucht, alles in eine andere Methode zu verschieben,
-        # allerdings wird dann keine neue Runde registriert. Daher muss die Ueberpruefung erstmal hier bleiben.
-
-        # Ueberprueft, ob Runde gefahren wurde
-        if gl.position > gl.playerZ:
-            if gl.current_lap_time and (start_position < gl.playerZ):
-                gl.last_lap_time = gl.current_lap_time
-                gl.current_lap_time = 0
-
-                gl.lap_start_time = time.time()
-                # Checkt nach Bestzeit
-                if gl.last_lap_time < gl.best_lap_time:
-                    gl.best_lap_time = gl.last_lap_time
-            else:
-                # Laesst die Zeit weiterlaufen.
-                current_time = time.time()
-                gl.current_lap_time = current_time - gl.lap_start_time
+        # Fast alles bezueglich Zeit wurde jetzt nach Util verlagert
+        Util.check_time(start_position)
 
         Util.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)

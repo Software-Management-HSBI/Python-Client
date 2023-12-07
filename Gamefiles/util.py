@@ -1,5 +1,6 @@
 import math
 import pygame
+import time
 
 import globals as gl
 from Visuals.colors import Colors
@@ -185,6 +186,24 @@ class Util:
     @staticmethod
     def interpolate(a, b, percent):
         return a + (b-a) * percent
+    
+
+    # Ueberprueft, ob Runde gefahren wurde
+    @staticmethod
+    def check_time(start_position):
+        if gl.position > gl.playerZ:
+            if gl.current_lap_time and (start_position < gl.playerZ):
+                gl.last_lap_time = gl.current_lap_time
+                gl.current_lap_time = 0
+
+                gl.lap_start_time = time.time()
+                # Checkt nach Bestzeit
+                if gl.last_lap_time < gl.best_lap_time:
+                    gl.best_lap_time = gl.last_lap_time
+            else:
+                # Laesst die Zeit weiterlaufen.
+                current_time = time.time()
+                gl.current_lap_time = current_time - gl.lap_start_time
     
     # Zeigt aktuelle, letzte und beste Zeit an
     @staticmethod
