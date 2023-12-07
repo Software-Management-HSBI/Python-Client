@@ -62,6 +62,8 @@ player = None
 player_sprites = None
 background_sprites = None
 
+clock = pygame.time.Clock()
+
 # Hiermit bildet man die Strasse. Es wird wahrscheinlich wichtig sein, dass dieses Array genauso auch beim Java-Client aufgebaut ist.
 # 1. Variable ist Strassenlaenge, die kann man so einstellen wie man will, passt
 # 2. Variable gibt an, wie scharf eine Kurve ist, alle Werte davon muessen am Ende 0 ergeben

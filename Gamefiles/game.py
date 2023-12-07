@@ -29,6 +29,7 @@ class Game:
         gl.background_sprites.draw(gl.screen)
 
         while True:
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -54,7 +55,10 @@ class Game:
 
             Render.render()
             self.update(gl.STEP)
-            pygame.display.update()
+            pygame.display.flip()
+
+            gl.clock.tick(gl.FPS)
+
 
     # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
     def update(self, dt):
