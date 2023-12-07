@@ -8,7 +8,6 @@ from Visuals.colors import Colors
 
 import globals as gl
 
-pygame.init()
 client = Client()
 
 # In diesen Methoden werden unsere Aufrufe fuer die verschiedenen Modi aufgerufen, sie sind die Aktionen der Buttons
