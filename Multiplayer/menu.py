@@ -25,10 +25,10 @@ def multiplayer():
 
 title = "Wakaliwood Gaming"
 
-start_Button = Button(10, 50, 200, 50, "Start", color=Colors.GREEN, action=start_game)
-options_Button = Button(400, 50, 200, 50, "Optionen", color=Colors.YELLOW, action=options)
-multiplayer_Button = Button(10, 300, 200, 50, "Mehrspieler", color=Colors.BLUE, action=multiplayer)
-quit_Button = Button(400, 300, 200, 50, "Beenden", color=Colors.WHITE, action=sys.exit)
+start_Button = Button(50, 50, 200, 50, "Start", color=Colors.GREEN, action=start_game)
+options_Button = Button(gl.width - 250, 50, 200, 50, "Optionen", color=Colors.YELLOW, action=options)
+multiplayer_Button = Button(50, gl.height - 100, 200, 50, "Mehrspieler", color=Colors.BLUE, action=multiplayer)
+quit_Button = Button(gl.width - 250, gl.height - 100, 200, 50, "Beenden", color=Colors.WHITE, action=sys.exit)
 
 buttons = [start_Button, options_Button, multiplayer_Button, quit_Button]
 
