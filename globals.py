@@ -3,6 +3,7 @@ import math
 
 pygame.init()
 
+# Sowohl in Python als auch in JavaScript sorgt das Veraedern der FPS fuer Probleme beim Spielverhalten
 FPS = 60
 STEP = 1/FPS
 DT = STEP

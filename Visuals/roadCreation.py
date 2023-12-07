@@ -22,6 +22,7 @@ road = [
 
 class Road:
     
+    # Liest das Strassen-Array aus und markiert Start-/Ziellinie
     @staticmethod
     def reset_road():
 

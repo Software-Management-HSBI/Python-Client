@@ -4,19 +4,15 @@ import sys
 import time
 
 from Gamefiles.util import Util
-from Visuals.player import Player
-from Visuals.background import Background
 from Visuals.colors import Colors
 from Visuals.render import Render
 from Visuals.roadCreation import Road
+from Visuals.spriteCreation import Sprites
 
 import globals as gl
 
 # Der Teil des Singleplayers, der alle anderen aktiviert: Hier werden Tasteneingaben überprüft und die Straße unendlich erweitert
 class Game:
-
-    pygame.init()
-    # Sowohl in Python als auch in JavaScript sorgt das Veraedern der FPS fuer Probleme beim Spielverhalten
 
     # Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel
     def __init__(self):
@@ -30,8 +26,8 @@ class Game:
 
     # Loop des Spiels: Erstellt Spieler und Hintergrund, nimmt Inputs entgegen und ruft permanent die render- und update-Methode auf
     def game_loop(self):
-        self.create_player()
-        self.create_background()
+        Sprites.create_player()
+        Sprites.create_background()
         gl.background_sprites.draw(gl.screen)
 
         while True:
@@ -115,33 +111,4 @@ class Game:
                 current_time = time.time()
                 gl.current_lap_time = current_time - gl.lap_start_time
 
-        self.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)
-
-    # Zeigt aktuelle, letzte und beste Zeit an
-    def update_time(self, current_lap_time, last_lap_time, best_lap_time):
-        best_time_text = gl.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
-        timer_text = gl.font.render(f"Aktuelle Runde: {int(current_lap_time)} Sekunden", True, Colors.BLACK)
-        last_time_text = gl.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
-        if not math.isinf(gl.best_lap_time):
-            best_time_text = gl.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)
-        gl.screen.blit(timer_text, (10, 10))
-        gl.screen.blit(last_time_text, (10, 50))
-        gl.screen.blit(best_time_text, (10, 90))
-        
-    # Liest das Strassen-Array aus und markiert Start-/Ziellinie
-
-
-    # Erstellt mit einer Hilfsklasse die einzelnen Hintergrundschichten
-    def create_background(self):
-        surface_sky = Background(0, pygame.image.load("assets/sky.png"))
-        surface_hills = Background(0, pygame.image.load("assets/hills.png"))
-        surface_trees = Background(0, pygame.image.load("assets/trees.png"))
-
-        gl.background_sprites.add(surface_sky)
-        gl.background_sprites.add(surface_hills)
-        gl.background_sprites.add(surface_trees)
-
-    # Platziert den Spieler in der Mitte der Strecke und ordnet ihm die Auto-Sprites zu
-    def create_player(self):
-        gl.player = Player(gl.screen.get_width() / 2 - 30, gl.screen.get_height() - 100)
-        gl.player_sprites.add(gl.player)
+        Util.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)

@@ -2,6 +2,7 @@ import math
 import pygame
 
 import globals as gl
+from Visuals.colors import Colors
 
 # Die Util-Klasse besitzt hauptsaechlich die Mathematik hinter dem Spiel
 class Util:
@@ -185,3 +186,14 @@ class Util:
     def interpolate(a, b, percent):
         return a + (b-a) * percent
     
+    # Zeigt aktuelle, letzte und beste Zeit an
+    @staticmethod
+    def update_time(current_lap_time, last_lap_time, best_lap_time):
+        best_time_text = gl.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
+        timer_text = gl.font.render(f"Aktuelle Runde: {int(current_lap_time)} Sekunden", True, Colors.BLACK)
+        last_time_text = gl.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
+        if not math.isinf(gl.best_lap_time):
+            best_time_text = gl.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)
+        gl.screen.blit(timer_text, (10, 10))
+        gl.screen.blit(last_time_text, (10, 50))
+        gl.screen.blit(best_time_text, (10, 90))
