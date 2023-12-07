@@ -9,6 +9,8 @@ from Visuals.background import Background
 from Visuals.road import Road
 from Visuals.colors import Colors
 
+import globals as gl
+
 # Hiermit bildet man die Strasse. Es wird wahrscheinlich wichtig sein, dass dieses Array genauso auch beim Java-Client aufgebaut ist.
 # 1. Variable ist Strassenlaenge, die kann man so einstellen wie man will, passt
 # 2. Variable gibt an, wie scharf eine Kurve ist, alle Werte davon muessen am Ende 0 ergeben
@@ -31,67 +33,14 @@ class Game:
 
     pygame.init()
     # Sowohl in Python als auch in JavaScript sorgt das Veraedern der FPS fuer Probleme beim Spielverhalten
-    FPS = 60
-    STEP = 1/FPS
-    DT = STEP
-
-    width = 1024
-    height = 768
-
-    segments = []
-
-    screen = None
-    background = None
-    sprites = None
-    resolution = None
-
-    # roadWidth bestimmt, wie breit die gesamte Strasse (alle Spuren) sein soll
-    roadWidth = 2000
-    segmentLength = 200
-    rumbleLength = 3
-    trackLength = 0
-    # lanes bestimmt, wie viele Spuren es auf der Straße geben soll (je breiter die Straße, desto mehr Spuren können realistisch genutzt werden)
-    lanes = 3
-
-    fov = 100
-    cameraHeight = 1000
-    cameraDepth = 1 / math.tan((fov / 2) * math.pi / 180)
-    drawDistance = 300
-    playerX = 0
-    playerZ = cameraHeight * cameraDepth
-    fogDensity = 10
-
-    position = 0
-    speed = 0
-    maxSpeed = segmentLength/STEP
-    accel = maxSpeed/5 - 10
-    breaking = -maxSpeed
-    decel = -maxSpeed/5
-    offRoadDecel = -maxSpeed/2
-    offRoadLimit = maxSpeed/4
-
-    # Beeinflusst das Verhalten des Autos in der Kurve; Je groesser der Wert, desto schwieriger die Lenkung
-    centrifugal = 0.3
-    # Falls wir V4 vom JavaScript machen wollen, werden die NPC-Autos in diesem Array gespeichert
-    cars = []
-    keyLeft = False
-    keyRight = False
-    keyFaster = False
-    keySlower = False
-
-    current_lap_time = 0
-    last_lap_time = 0
-    best_lap_time = float('inf')
-    font = pygame.font.SysFont(None, 36)
-    lap_start_time = 0
 
     # Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel
     def __init__(self):
-        self.screen = pygame.display.set_mode((self.width, self.height))
+        gl.screen = pygame.display.set_mode((gl.width, gl.height))
         pygame.display.set_caption("Singleplayer")
-        self.player_sprites = pygame.sprite.Group()
-        self.background_sprites = pygame.sprite.Group()
-        self.lap_start_time = time.time()
+        gl.player_sprites = pygame.sprite.Group()
+        gl.background_sprites = pygame.sprite.Group()
+        gl.lap_start_time = time.time()
         self.reset_road()
         self.game_loop()
 
@@ -99,7 +48,7 @@ class Game:
     def game_loop(self):
         self.create_player()
         self.create_background()
-        self.background_sprites.draw(self.screen)
+        gl.background_sprites.draw(gl.screen)
 
         while True:
             for event in pygame.event.get():
@@ -108,117 +57,117 @@ class Game:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
-                        self.keyLeft = True
+                        gl.keyLeft = True
                     if event.key == pygame.K_RIGHT:
-                        self.keyRight = True
+                        gl.keyRight = True
                     if event.key == pygame.K_UP:
-                        self.keyFaster = True
+                        gl.keyFaster = True
                     if event.key == pygame.K_DOWN:
-                        self.keySlower = True
+                        gl.keySlower = True
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
-                        self.keyLeft = False
+                        gl.keyLeft = False
                     if event.key == pygame.K_RIGHT:
-                        self.keyRight = False
+                        gl.keyRight = False
                     if event.key == pygame.K_UP:
-                        self.keyFaster = False
+                        gl.keyFaster = False
                     if event.key == pygame.K_DOWN:
-                        self.keySlower = False
+                        gl.keySlower = False
 
             self.render()
-            self.update(self.STEP)
+            self.update(gl.STEP)
             pygame.display.update()
 
     # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
     def update(self, dt):
-        start_position = self.position
+        start_position = gl.position
 
-        self.position = Util.increase(self.position, dt * self.speed, self.trackLength)
-        current_segment = self.which_segment(self.position + self.playerZ)
+        gl.position = Util.increase(gl.position, dt * gl.speed, gl.trackLength)
+        current_segment = self.which_segment(gl.position + gl.playerZ)
 
-        tilt = dt * 2 * (self.speed / self.maxSpeed)
+        tilt = dt * 2 * (gl.speed / gl.maxSpeed)
 
-        if self.keyLeft:
-            self.playerX = self.playerX - tilt
-            if self.speed > 0:
-                self.player.drive_left()
-        elif self.keyRight:
-            self.playerX = self.playerX + tilt
-            if self.speed > 0:
-                self.player.drive_right()
+        if gl.keyLeft:
+            gl.playerX = gl.playerX - tilt
+            if gl.speed > 0:
+                gl.player.drive_left()
+        elif gl.keyRight:
+            gl.playerX = gl.playerX + tilt
+            if gl.speed > 0:
+                gl.player.drive_right()
         else:
-            self.player.drive_straight()
+            gl.player.drive_straight()
 
-        self.playerX -= tilt * (self.speed / self.maxSpeed) * current_segment.get("curve") * self.centrifugal
+        gl.playerX -= tilt * (gl.speed / gl.maxSpeed) * current_segment.get("curve") * gl.centrifugal
 
-        if self.keyFaster:
-            self.speed = Util.accelerate(self.speed, self.accel, self.DT)
-        elif self.keySlower:
-            self.speed = Util.accelerate(self.speed, self.breaking, self.DT)
+        if gl.keyFaster:
+            gl.speed = Util.accelerate(gl.speed, gl.accel, gl.DT)
+        elif gl.keySlower:
+            gl.speed = Util.accelerate(gl.speed, gl.breaking, gl.DT)
         else:
-            self.speed = Util.accelerate(self.speed, self.decel, self.DT)
+            gl.speed = Util.accelerate(gl.speed, gl.decel, gl.DT)
 
-        if (self.playerX < -1 or self.playerX > 1) and (self.speed > self.offRoadLimit):
-            self.speed = Util.accelerate(self.speed, self.offRoadDecel, self.DT)
+        if (gl.playerX < -1 or gl.playerX > 1) and (gl.speed > gl.offRoadLimit):
+            gl.speed = Util.accelerate(gl.speed, gl.offRoadDecel, gl.DT)
 
-        self.playerX = Util.limit(self.playerX, -2, 2)
-        self.speed = Util.limit(self.speed, 0, self.maxSpeed)
+        gl.playerX = Util.limit(gl.playerX, -2, 2)
+        gl.speed = Util.limit(gl.speed, 0, gl.maxSpeed)
 
         # Das alles hier ist die Lap-Berechnung, ich hab versucht, alles in eine andere Methode zu verschieben,
         # allerdings wird dann keine neue Runde registriert. Daher muss die Ueberpruefung erstmal hier bleiben.
 
         # Ueberprueft, ob Runde gefahren wurde
-        if self.position > self.playerZ:
-            if self.current_lap_time and (start_position < self.playerZ):
-                self.last_lap_time = self.current_lap_time
-                self.current_lap_time = 0
+        if gl.position > gl.playerZ:
+            if gl.current_lap_time and (start_position < gl.playerZ):
+                gl.last_lap_time = gl.current_lap_time
+                gl.current_lap_time = 0
 
-                self.lap_start_time = time.time()
+                gl.lap_start_time = time.time()
                 # Checkt nach Bestzeit
-                if self.last_lap_time < self.best_lap_time:
-                    self.best_lap_time = self.last_lap_time
+                if gl.last_lap_time < gl.best_lap_time:
+                    gl.best_lap_time = gl.last_lap_time
             else:
                 # Laesst die Zeit weiterlaufen.
                 current_time = time.time()
-                self.current_lap_time = current_time - self.lap_start_time
+                gl.current_lap_time = current_time - gl.lap_start_time
 
-        self.update_time(self.current_lap_time, self.last_lap_time, self.best_lap_time)
+        self.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)
 
     # Zeigt aktuelle, letzte und beste Zeit an
     def update_time(self, current_lap_time, last_lap_time, best_lap_time):
-        best_time_text = self.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
-        timer_text = self.font.render(f"Aktuelle Runde: {int(current_lap_time)} Sekunden", True, Colors.BLACK)
-        last_time_text = self.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
-        if not math.isinf(self.best_lap_time):
-            best_time_text = self.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)
-        self.screen.blit(timer_text, (10, 10))
-        self.screen.blit(last_time_text, (10, 50))
-        self.screen.blit(best_time_text, (10, 90))
+        best_time_text = gl.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
+        timer_text = gl.font.render(f"Aktuelle Runde: {int(current_lap_time)} Sekunden", True, Colors.BLACK)
+        last_time_text = gl.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
+        if not math.isinf(gl.best_lap_time):
+            best_time_text = gl.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)
+        gl.screen.blit(timer_text, (10, 10))
+        gl.screen.blit(last_time_text, (10, 50))
+        gl.screen.blit(best_time_text, (10, 90))
         
     # Liest das Strassen-Array aus und markiert Start-/Ziellinie
     def reset_road(self):
 
         self.read_road()
 
-        self.segments[self.which_segment(self.playerZ)["index"] + 2]["color"] = Colors.get_start()
-        self.segments[self.which_segment(self.playerZ)["index"] + 3]["color"] = Colors.get_start()
-        for n in range(self.rumbleLength):
-            self.segments[len(self.segments)-1-n]["color"] = Colors.get_finish()
+        gl.segments[self.which_segment(gl.playerZ)["index"] + 2]["color"] = Colors.get_start()
+        gl.segments[self.which_segment(gl.playerZ)["index"] + 3]["color"] = Colors.get_start()
+        for n in range(gl.rumbleLength):
+            gl.segments[len(gl.segments)-1-n]["color"] = Colors.get_finish()
 
-        self.trackLength = len(self.segments) * self.segmentLength
+        gl.trackLength = len(gl.segments) * gl.segmentLength
     
     # Hier wird das hinzuzufuegende Segment anhand von Kurven- und Huegel-Parametern angepasst
     def add_segment(self, curve, y):
-        n = len(self.segments)
+        n = len(gl.segments)
         # Diese Werte muessen (hoffentlich) nicht mehr geaendert werden, jetzt wo Kurven (curve-Parameter) und Huegel (y-Parameter) benutzt werden
-        self.segments.append(
+        gl.segments.append(
                 {
                     'index': n,
                     'p1':
                         {'world': {
                             'x': None,
                             'y': self.lastY(),
-                            'z': n * self.segmentLength
+                            'z': n * gl.segmentLength
                         },
                             'camera': {
                                 'x': 0,
@@ -235,7 +184,7 @@ class Game:
                         {'world': {
                             'x': None,
                             'y': y,
-                            'z': (n + 1) * self.segmentLength
+                            'z': (n + 1) * gl.segmentLength
                         },
                             'camera': {
                                 'x': 0,
@@ -258,7 +207,7 @@ class Game:
     # Fuegt Strassenteile an das Segment-Array hinzu
     def add_road(self, enter, hold, leave, curve, y=0):
         startY = self.lastY()
-        endY = startY + (int(y)*self.segmentLength)
+        endY = startY + (int(y)*gl.segmentLength)
         total = int(enter) + int(hold) + int(leave)
         
         for n in range(int(enter)):
@@ -283,73 +232,73 @@ class Game:
 
     # Gibt die letzte Y-Koordinate aus, um einen glatten Huegel zu modellieren
     def lastY(self):
-        if len(self.segments) == 0:
+        if len(gl.segments) == 0:
             return 0
-        return self.segments[len(self.segments)-1].get("p2").get("world").get("y")
+        return gl.segments[len(gl.segments)-1].get("p2").get("world").get("y")
 
     # Hilfsmethode, um zu gucken, welche Farbe das aktuelle Strassenstueck haben muss
     def which_road(self, n):
-         if (n / self.rumbleLength) % 2 == 0:
+         if (n / gl.rumbleLength) % 2 == 0:
               return Colors.get_light()
          else:
               return Colors.get_dark()
 
     # Hilfsmethode, um das derzeit notwendige Segment auszuwaehlen
     def which_segment(self, n):
-         return self.segments[math.floor(n / self.segmentLength) % len(self.segments)]
+         return gl.segments[math.floor(n / gl.segmentLength) % len(gl.segments)]
     
     # Setzt ab einem bestimmten Punkt die Distanz der Strecke zurueck (?) und zeichnet Strecke, Nebel und Spieler auf den Bildschirm
     def render(self):
-        base = self.which_segment(self.position)
-        base_percent = Util.percent_remaining(self.position, self.segmentLength)
-        current_segment = self.which_segment(self.position + self.playerZ)
-        current_percent = Util.percent_remaining(self.position + self.playerZ, self.segmentLength)
+        base = self.which_segment(gl.position)
+        base_percent = Util.percent_remaining(gl.position, gl.segmentLength)
+        current_segment = self.which_segment(gl.position + gl.playerZ)
+        current_percent = Util.percent_remaining(gl.position + gl.playerZ, gl.segmentLength)
         playerY = Util.interpolate(current_segment.get("p1").get("world").get("y"), current_segment.get("p2").get("world").get("y"), current_percent)
 
         dx = -(base.get("curve") * base_percent)
         x = 0
-        maxY = self.height
+        maxY = gl.height
 
-        self.background_sprites.draw(self.screen)
+        gl.background_sprites.draw(gl.screen)
 
-        for n in range(self.drawDistance):
-            segment = self.segments[(base.get("index") + n) % len(self.segments)]
+        for n in range(gl.drawDistance):
+            segment = gl.segments[(base.get("index") + n) % len(gl.segments)]
             segment_looped = segment.get("index") < base.get("index")
-            segment_fog = Util.exponential_fog(n / self.drawDistance, self.fogDensity)
+            segment_fog = Util.exponential_fog(n / gl.drawDistance, gl.fogDensity)
             segment["clip"] = maxY
 
             if segment_looped:
-                segment_looped_value = self.trackLength
+                segment_looped_value = gl.trackLength
             else:
                 segment_looped_value = 0
 
             segment["p1"] = Util.project(
                 segment.get("p1"),
-                (self.playerX * self.roadWidth) - x,
-                playerY + self.cameraHeight,
-                self.position - segment_looped_value,
-                self.cameraDepth,
-                self.width, self.height,
-                self.roadWidth)
+                (gl.playerX * gl.roadWidth) - x,
+                playerY + gl.cameraHeight,
+                gl.position - segment_looped_value,
+                gl.cameraDepth,
+                gl.width, gl.height,
+                gl.roadWidth)
 
             segment["p2"] = Util.project(
                 segment.get("p2"),
-                (self.playerX * self.roadWidth) -x - dx,
-                playerY + self.cameraHeight,
-                self.position - segment_looped_value,
-                self.cameraDepth,
-                self.width, self.height,
-                self.roadWidth)
+                (gl.playerX * gl.roadWidth) -x - dx,
+                playerY + gl.cameraHeight,
+                gl.position - segment_looped_value,
+                gl.cameraDepth,
+                gl.width, gl.height,
+                gl.roadWidth)
             
             x += dx
             dx += segment.get("curve")
 
-            if (segment.get("p1").get("camera").get("z") <= self.cameraDepth) or (
+            if (segment.get("p1").get("camera").get("z") <= gl.cameraDepth) or (
                     segment.get("p2").get("screen").get("y") >= maxY) or (
                     segment.get("p2").get("screen").get("y") >= segment.get("p1").get("screen").get("y")):
                 continue
 
-            Util.segment(self.screen, self.width, self.lanes,
+            Util.segment(gl.screen, gl.width, gl.lanes,
                         segment.get("p1").get("screen").get("x"),
                         segment.get("p1").get("screen").get("y"),
                         segment.get("p1").get("screen").get("w"),
@@ -360,7 +309,7 @@ class Game:
 
             maxY = segment.get("p1").get("screen").get("y")
 
-            self.player_sprites.draw(self.screen)   
+            gl.player_sprites.draw(gl.screen)   
 
     # Erstellt mit einer Hilfsklasse die einzelnen Hintergrundschichten
     def create_background(self):
@@ -368,14 +317,14 @@ class Game:
         surface_hills = Background(0, pygame.image.load("assets/hills.png"))
         surface_trees = Background(0, pygame.image.load("assets/trees.png"))
 
-        self.background_sprites.add(surface_sky)
-        self.background_sprites.add(surface_hills)
-        self.background_sprites.add(surface_trees)
+        gl.background_sprites.add(surface_sky)
+        gl.background_sprites.add(surface_hills)
+        gl.background_sprites.add(surface_trees)
 
     # Platziert den Spieler in der Mitte der Strecke und ordnet ihm die Auto-Sprites zu
     def create_player(self):
-        self.player = Player(self.screen.get_width() / 2 - 30, self.screen.get_height() - 100)
-        self.player_sprites.add(self.player)
+        gl.player = Player(gl.screen.get_width() / 2 - 30, gl.screen.get_height() - 100)
+        gl.player_sprites.add(gl.player)
 
     # Liest das Strassen-Array aus und entscheidet je nach Menge an Werten, ob Kurven oder Huegel zum Segment gehoeren
     def read_road(self):
