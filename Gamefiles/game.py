@@ -1,6 +1,7 @@
 import pygame
 import math
 import sys
+import time
 
 from Gamefiles.util import Util
 from Visuals.player import Player
@@ -9,6 +10,9 @@ from Visuals.road import Road
 from Visuals.colors import Colors
 
 # Hiermit bildet man die Strasse. Es wird wahrscheinlich wichtig sein, dass dieses Array genauso auch beim Java-Client aufgebaut ist.
+# 1. Variable ist Strassenlaenge, die kann man so einstellen wie man will, passt
+# 2. Variable gibt an, wie scharf eine Kurve ist, alle Werte davon muessen am Ende 0 ergeben
+# 3. Variable gibt an, wie steil ein Huegel ist, alle Werte davon muessen am Ende 0 ergeben
 # TODO: Gemeinsame Speicherloesung finden
 road = [
     [100, 0, 60],
@@ -16,16 +20,20 @@ road = [
     [100, 0, -60],
     [90, 4],
     [50],
-    [90, -4]
+    [90, -4],
+    [75, 3, 40],
+    [25],
+    [100, -3, -40]
 ]
 
 # Der Teil des Singleplayers, der alle anderen aktiviert: Hier werden Tasteneingaben überprüft und die Straße unendlich erweitert
 class Game:
 
+    pygame.init()
     # Sowohl in Python als auch in JavaScript sorgt das Veraedern der FPS fuer Probleme beim Spielverhalten
     FPS = 60
     STEP = 1/FPS
-    DT = 1/FPS/2
+    DT = STEP
 
     width = 1024
     height = 768
@@ -66,19 +74,24 @@ class Game:
     centrifugal = 0.3
     # Falls wir V4 vom JavaScript machen wollen, werden die NPC-Autos in diesem Array gespeichert
     cars = []
-
     keyLeft = False
     keyRight = False
     keyFaster = False
     keySlower = False
 
+    current_lap_time = 0
+    last_lap_time = 0
+    best_lap_time = float('inf')
+    font = pygame.font.SysFont(None, 36)
+    lap_start_time = 0
+
     # Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel
     def __init__(self):
-        pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Singleplayer")
         self.player_sprites = pygame.sprite.Group()
         self.background_sprites = pygame.sprite.Group()
+        self.lap_start_time = time.time()
         self.reset_road()
         self.game_loop()
 
@@ -118,6 +131,8 @@ class Game:
 
     # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
     def update(self, dt):
+        start_position = self.position
+
         self.position = Util.increase(self.position, dt * self.speed, self.trackLength)
         current_segment = self.which_segment(self.position + self.playerZ)
 
@@ -149,7 +164,36 @@ class Game:
         self.playerX = Util.limit(self.playerX, -2, 2)
         self.speed = Util.limit(self.speed, 0, self.maxSpeed)
 
-        playerW = ((1/80) * 0.3) * 80
+        # Das alles hier ist die Lap-Berechnung, ich hab versucht, alles in eine andere Methode zu verschieben,
+        # allerdings wird dann keine neue Runde registriert. Daher muss die Ueberpruefung erstmal hier bleiben.
+
+        # Ueberprueft, ob Runde gefahren wurde
+        if self.position > self.playerZ:
+            if self.current_lap_time and (start_position < self.playerZ):
+                self.last_lap_time = self.current_lap_time
+                self.current_lap_time = 0
+
+                self.lap_start_time = time.time()
+                # Checkt nach Bestzeit
+                if self.last_lap_time < self.best_lap_time:
+                    self.best_lap_time = self.last_lap_time
+            else:
+                # Laesst die Zeit weiterlaufen.
+                current_time = time.time()
+                self.current_lap_time = current_time - self.lap_start_time
+
+        self.update_time(self.current_lap_time, self.last_lap_time, self.best_lap_time)
+
+    # Zeigt aktuelle, letzte und beste Zeit an
+    def update_time(self, current_lap_time, last_lap_time, best_lap_time):
+        best_time_text = self.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
+        timer_text = self.font.render(f"Aktuelle Runde: {int(current_lap_time)} Sekunden", True, Colors.BLACK)
+        last_time_text = self.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
+        if not math.isinf(self.best_lap_time):
+            best_time_text = self.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)
+        self.screen.blit(timer_text, (10, 10))
+        self.screen.blit(last_time_text, (10, 50))
+        self.screen.blit(best_time_text, (10, 90))
         
     # Liest das Strassen-Array aus und markiert Start-/Ziellinie
     def reset_road(self):
