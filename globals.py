@@ -23,7 +23,8 @@ roadWidth = 2000
 segmentLength = 200
 rumbleLength = 3
 trackLength = 0
-# lanes bestimmt, wie viele Spuren es auf der Straße geben soll (je breiter die Straße, desto mehr Spuren können realistisch genutzt werden)
+# lanes bestimmt, wie viele Spuren es auf der Straße geben soll
+# je breiter die Straße, desto mehr Spuren können realistisch genutzt werden
 lanes = 3
 
 fov = 100
@@ -33,10 +34,11 @@ drawDistance = 300
 playerX = 0
 playerZ = cameraHeight * cameraDepth
 fogDensity = 10
+playerw = ((1/80) * 0.3) * 80
 
 position = 0
 speed = 0
-maxSpeed = segmentLength/STEP
+maxSpeed = 20000
 accel = maxSpeed/5 - 10
 breaking = -maxSpeed
 decel = -maxSpeed/5
@@ -47,6 +49,8 @@ offRoadLimit = maxSpeed/4
 centrifugal = 0.3
 # Falls wir V4 vom JavaScript machen wollen, werden die NPC-Autos in diesem Array gespeichert
 cars = []
+car_amount = 25
+
 keyLeft = False
 keyRight = False
 keyFaster = False
@@ -64,7 +68,8 @@ background_sprites = None
 
 clock = pygame.time.Clock()
 
-# Hiermit bildet man die Strasse. Es wird wahrscheinlich wichtig sein, dass dieses Array genauso auch beim Java-Client aufgebaut ist.
+# Hiermit bildet man die Strasse. Es wird wahrscheinlich wichtig sein,
+# dass dieses Array genauso auch beim Java-Client aufgebaut ist.
 # 1. Variable ist Strassenlaenge, die kann man so einstellen wie man will, passt
 # 2. Variable gibt an, wie scharf eine Kurve ist, alle Werte davon muessen am Ende 0 ergeben
 # 3. Variable gibt an, wie steil ein Huegel ist, alle Werte davon muessen am Ende 0 ergeben

@@ -65,4 +65,28 @@ class Render:
 
             maxY = segment.get("p1").get("screen").get("y")
 
-            gl.player_sprites.draw(gl.screen)   
+        for n in range(gl.drawDistance -1, 0, -1):
+            segment = gl.segments[(base.get("index") + n) % len(gl.segments)]
+            Render.render_cars(segment)
+
+        gl.player_sprites.draw(gl.screen)
+
+    @staticmethod
+    def render_cars(segment):
+        for i in range(len(segment.get("cars"))):
+            car = segment.get("cars")[i]
+            sprite = car.get("sprite")
+            car["percent"] = Util.percent_remaining(car.get("z"), gl.segmentLength)
+
+            sprite_scale = Util.interpolate(segment.get("p1").get("screen").get("scale"),
+                                            segment.get("p2").get("screen").get("scale"), car.get("percent"))
+
+            sprite_x = Util.interpolate(segment.get("p1").get("screen").get("x"),
+                                        segment.get("p2").get("screen").get("x"), car.get("percent")) + (
+                               sprite_scale * car.get("offset") * gl.roadWidth * (gl.width / 2))
+
+            sprite_y = Util.interpolate(segment.get("p1").get("screen").get("y"),
+                                        segment.get("p2").get("screen").get("y"), car.get("percent"))
+
+            Util.sprite(gl.screen, gl.width, gl.roadWidth, sprite, sprite_scale, sprite_x,
+                        sprite_y, -0.5, -1, segment.get("clip"))

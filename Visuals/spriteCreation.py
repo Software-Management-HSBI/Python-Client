@@ -1,11 +1,17 @@
+import math
+import random
+
 import globals as gl
 import pygame
 
 from Visuals.player import Player
 from Visuals.background import Background
+from Gamefiles.util import Util
+from Visuals.npcSprites import Sprite
+
 
 class Sprites:
-     # Erstellt mit einer Hilfsklasse die einzelnen Hintergrundschichten
+    # Erstellt mit einer Hilfsklasse die einzelnen Hintergrundschichten
     @staticmethod
     def create_background():
         surface_sky = Background(0, pygame.image.load("assets/sky.png"))
@@ -21,3 +27,15 @@ class Sprites:
     def create_player():
         gl.player = Player(gl.screen.get_width() / 2 - 30, gl.screen.get_height() - 100)
         gl.player_sprites.add(gl.player)
+
+    @staticmethod
+    def create_bots():
+        for n in range(gl.car_amount):
+            offset = random.random() * Util.random_choice([-0.5, 0.5])
+            z = math.floor(random.random() * len(gl.segments) * gl.segmentLength)
+            sprite = Sprite.get_car()
+            speed = gl.maxSpeed / 4 + random.random() * gl.maxSpeed / 2
+            car = {"offset": offset, "z": z, "sprite": sprite, "speed": speed, "percent": 0}
+            segment = Util.which_segment(z)
+            segment["cars"].append(car)
+            gl.cars.append(car)

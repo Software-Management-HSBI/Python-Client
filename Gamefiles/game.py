@@ -6,6 +6,7 @@ from Gamefiles.util import Util
 from Visuals.render import Render
 from Visuals.road import Road
 from Visuals.spriteCreation import Sprites
+from Gamefiles.carAI import AI
 
 import globals as gl
 
@@ -95,7 +96,10 @@ class Game:
         gl.playerX = Util.limit(gl.playerX, -2, 2)
         gl.speed = Util.limit(gl.speed, 0, gl.maxSpeed)
 
+        AI.update_cars(dt, current_segment, gl.playerw)
+
         # Fast alles bezueglich Zeit wurde jetzt nach Util verlagert
         Util.check_time(start_position)
 
         Util.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)
+

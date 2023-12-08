@@ -1,6 +1,7 @@
 import globals as gl
 from Gamefiles.util import Util
 from Visuals.colors import Colors
+from Visuals.spriteCreation import Sprites
 
 class Road:
     
@@ -9,6 +10,7 @@ class Road:
     def reset_road():
 
         Road.read_road()
+        Sprites.create_bots()
 
         gl.segments[Util.which_segment(gl.playerZ)["index"] + 2]["color"] = Colors.get_start()
         gl.segments[Util.which_segment(gl.playerZ)["index"] + 3]["color"] = Colors.get_start()
