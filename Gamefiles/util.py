@@ -160,7 +160,7 @@ class Util:
         else:
             clip_h = max(0, destY + dest_h - clip_y)
 
-        if clip_h < dest_h:
+        if clip_h < dest_h and (dest_w <= (sprite.get("width") * 5) or (dest_h <= (sprite.get("height") * 5))):
             img = pygame.image.load(sprite.get("asset")).convert()
             hill = pygame.transform.scale(img, (dest_w, dest_h))
             hill = pygame.transform.chop(hill, (

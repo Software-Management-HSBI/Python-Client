@@ -3,86 +3,92 @@ from Gamefiles.util import Util
 from Visuals.colors import Colors
 from Visuals.spriteCreation import Sprites
 
+
 class Road:
-    
+
     # Liest das Strassen-Array aus und markiert Start-/Ziellinie
     @staticmethod
     def reset_road():
 
+        gl.segments = []
+
         Road.read_road()
         Sprites.create_bots()
+        Sprites.create_obstacles()
 
         gl.segments[Util.which_segment(gl.playerZ)["index"] + 2]["color"] = Colors.get_start()
         gl.segments[Util.which_segment(gl.playerZ)["index"] + 3]["color"] = Colors.get_start()
         for n in range(gl.rumbleLength):
-            gl.segments[len(gl.segments)-1-n]["color"] = Colors.get_finish()
+            gl.segments[len(gl.segments) - 1 - n]["color"] = Colors.get_finish()
 
         gl.trackLength = len(gl.segments) * gl.segmentLength
-    
+
     # Hier wird das hinzuzufuegende Segment anhand von Kurven- und Huegel-Parametern angepasst
     @staticmethod
     def add_segment(curve, y):
         n = len(gl.segments)
         # Diese Werte muessen (hoffentlich) nicht mehr geaendert werden, jetzt wo Kurven (curve-Parameter) und Huegel (y-Parameter) benutzt werden
         gl.segments.append(
-                {
-                    'index': n,
-                    'p1':
-                        {'world': {
-                            'x': None,
-                            'y': Road.lastY(),
-                            'z': n * gl.segmentLength
+            {
+                'index': n,
+                'p1':
+                    {'world': {
+                        'x': None,
+                        'y': Road.lastY(),
+                        'z': n * gl.segmentLength
+                    },
+                        'camera': {
+                            'x': 0,
+                            'y': 0,
+                            'z': 0
                         },
-                            'camera': {
-                                'x': 0,
-                                'y': 0,
-                                'z': 0
-                            },
-                            'screen': {
-                                "scale": 0,
-                                'x': 0,
-                                'y': 0,
-                            },
+                        'screen': {
+                            "scale": 0,
+                            'x': 0,
+                            'y': 0,
                         },
-                    'p2':
-                        {'world': {
-                            'x': None,
-                            'y': y,
-                            'z': (n + 1) * gl.segmentLength
+                    },
+                'p2':
+                    {'world': {
+                        'x': None,
+                        'y': y,
+                        'z': (n + 1) * gl.segmentLength
+                    },
+                        'camera': {
+                            'x': 0,
+                            'y': 0,
+                            'z': 0
                         },
-                            'camera': {
-                                'x': 0,
-                                'y': 0,
-                                'z': 0
-                            },
-                            'screen': {
-                                "scale": 0,
-                                'x': 0,
-                                'y': 0,
-                            },
+                        'screen': {
+                            "scale": 0,
+                            'x': 0,
+                            'y': 0,
                         },
-                        "curve": curve,
-                        "cars": [],
-                        "clip": 0,
-                    "color": Road.which_road(n)
-                }
-            )
+                    },
+                "curve": curve,
+                "cars": [],
+                "clip": 0,
+                "sprites": [],
+                "color": Road.which_road(n)
+            }
+        )
 
     # Fuegt Strassenteile an das Segment-Array hinzu
     @staticmethod
     def add_road(enter, hold, leave, curve, y=0):
         startY = Road.lastY()
-        endY = startY + (int(y)*gl.segmentLength)
+        endY = startY + (int(y) * gl.segmentLength)
         total = int(enter) + int(hold) + int(leave)
-        
+
         for n in range(int(enter)):
             Road.add_segment(Util.easeIn(0, curve, n / enter), Util.easeInOut(startY, endY, n / total))
-        
+
         for n in range(int(hold)):
             Road.add_segment(curve, Util.easeInOut(startY, endY, (enter + n) / total))
 
         for n in range(int(leave)):
-            Road.add_segment(Util.easeInOut(0, curve, n / enter), Util.easeInOut(startY, endY, (enter + hold + n) / total))
+            Road.add_segment(Util.easeInOut(0, curve, n / enter),
+                             Util.easeInOut(startY, endY, (enter + hold + n) / total))
 
     # Ueberprueft, ob Werte des Straßenmoduls leer ist
     @staticmethod
@@ -101,16 +107,16 @@ class Road:
     def lastY():
         if len(gl.segments) == 0:
             return 0
-        return gl.segments[len(gl.segments)-1].get("p2").get("world").get("y")
+        return gl.segments[len(gl.segments) - 1].get("p2").get("world").get("y")
 
     # Hilfsmethode, um zu gucken, welche Farbe das aktuelle Strassenstueck haben muss
     @staticmethod
     def which_road(n):
-         if (n / gl.rumbleLength) % 2 == 0:
-              return Colors.get_light()
-         else:
-              return Colors.get_dark()
-         
+        if (n / gl.rumbleLength) % 2 == 0:
+            return Colors.get_light()
+        else:
+            return Colors.get_dark()
+
     # Liest das Strassen-Array aus und entscheidet je nach Menge an Werten, ob Kurven oder Huegel zum Segment gehoeren
     @staticmethod
     def read_road():
@@ -131,7 +137,7 @@ class Road:
             "long": 100
         }
         return road
-    
+
     @staticmethod
     def curve():
         curve = {

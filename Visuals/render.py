@@ -67,6 +67,7 @@ class Render:
 
         for n in range(gl.drawDistance -1, 0, -1):
             segment = gl.segments[(base.get("index") + n) % len(gl.segments)]
+            Render.render_sprites(segment)
             Render.render_cars(segment)
 
         gl.player_sprites.draw(gl.screen)
@@ -90,3 +91,18 @@ class Render:
 
             Util.sprite(gl.screen, gl.width, gl.roadWidth, sprite, sprite_scale, sprite_x,
                         sprite_y, -0.5, -1, segment.get("clip"))
+
+    @staticmethod
+    def render_sprites(segment):
+        for i in range(len(segment.get("sprites"))):
+            sprite = segment.get("sprites")[i]
+            sprite_scale = segment.get("p1").get("screen").get("scale")
+            sprite_x = segment.get("p1").get("screen").get("x") + (sprite_scale * sprite.get("offset") * gl.roadWidth * gl.width / 2)
+            sprite_y = segment.get("p1").get("screen").get("y")
+
+            if sprite.get("offset") < 0:
+                offset = -1
+            else:
+                offset = 0
+
+            Util.sprite(gl.screen, gl.width, gl.roadWidth, sprite.get("source"), sprite_scale, sprite_x, sprite_y, offset, -1, segment.get("clip"))

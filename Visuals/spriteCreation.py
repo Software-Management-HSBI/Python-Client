@@ -7,7 +7,7 @@ import pygame
 from Visuals.player import Player
 from Visuals.background import Background
 from Gamefiles.util import Util
-from Visuals.npcSprites import Sprite
+from Visuals.sprites import Sprite
 
 
 class Sprites:
@@ -29,6 +29,13 @@ class Sprites:
         gl.player_sprites.add(gl.player)
 
     @staticmethod
+    def create_obstacles():
+        for i in range(0, len(gl.segments), 100):
+            Sprites.add_sprite(i, Sprite.create_tree(), -1)
+            Sprites.add_sprite(i, Sprite.create_billboard(), -1)
+
+
+    @staticmethod
     def create_bots():
         for n in range(gl.car_amount):
             offset = random.random() * Util.random_choice([-0.5, 0.5])
@@ -39,3 +46,8 @@ class Sprites:
             segment = Util.which_segment(z)
             segment["cars"].append(car)
             gl.cars.append(car)
+
+
+    @staticmethod
+    def add_sprite(n, sprite, offset):
+        gl.segments[n]["sprites"].append({"source": sprite, "offset": offset})
