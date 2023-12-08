@@ -1,5 +1,9 @@
 import math
 import pygame
+import time
+
+import globals as gl
+from Visuals.colors import Colors
 
 # Die Util-Klasse besitzt hauptsaechlich die Mathematik hinter dem Spiel
 class Util:
@@ -60,6 +64,11 @@ class Util:
             return 1
         else:
             return value
+        
+    # Hilfsmethode, um das derzeit notwendige Segment auszuwaehlen
+    @staticmethod
+    def which_segment(n):
+         return gl.segments[math.floor(n / gl.segmentLength) % len(gl.segments)]
 
     # Methode aus dem JavaScript, die die einzelnen Strassenteile modelliert und den Nebel hinzufuegt
     @staticmethod
@@ -177,3 +186,33 @@ class Util:
     @staticmethod
     def interpolate(a, b, percent):
         return a + (b-a) * percent
+    
+
+    # Ueberprueft, ob Runde gefahren wurde
+    @staticmethod
+    def check_time(start_position):
+        if gl.position > gl.playerZ:
+            if gl.current_lap_time and (start_position < gl.playerZ):
+                gl.last_lap_time = gl.current_lap_time
+                gl.current_lap_time = 0
+
+                gl.lap_start_time = time.time()
+                # Checkt nach Bestzeit
+                if gl.last_lap_time < gl.best_lap_time:
+                    gl.best_lap_time = gl.last_lap_time
+            else:
+                # Laesst die Zeit weiterlaufen.
+                current_time = time.time()
+                gl.current_lap_time = current_time - gl.lap_start_time
+    
+    # Zeigt aktuelle, letzte und beste Zeit an
+    @staticmethod
+    def update_time(current_lap_time, last_lap_time, best_lap_time):
+        best_time_text = gl.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
+        timer_text = gl.font.render(f"Aktuelle Runde: {int(current_lap_time)} Sekunden", True, Colors.BLACK)
+        last_time_text = gl.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
+        if not math.isinf(gl.best_lap_time):
+            best_time_text = gl.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)
+        gl.screen.blit(timer_text, (10, 10))
+        gl.screen.blit(last_time_text, (10, 50))
+        gl.screen.blit(best_time_text, (10, 90))

@@ -1,12 +1,13 @@
 import pygame
 import sys
 
+from Multiplayer.button import Button
 from Multiplayer.client import Client
 from Gamefiles.game import Game
-from Multiplayer.button import Button
 from Visuals.colors import Colors
 
-pygame.init()
+import globals as gl
+
 client = Client()
 
 # In diesen Methoden werden unsere Aufrufe fuer die verschiedenen Modi aufgerufen, sie sind die Aktionen der Buttons
@@ -21,15 +22,14 @@ def options():
 def multiplayer():
     pass
 
-width = 1024
-height = 768
 title = "Wakaliwood Gaming"
 
-start_Button = Button(400, 75, 200, 50, "Start", color=Colors.GREEN, action=start_game)
-options_Button = Button(400, 375, 200, 50, "Optionen", color=Colors.YELLOW, action=options)
-multiplayer_Button = Button(400, 675, 200, 50, "Mehrspieler", color=Colors.BLUE, action=multiplayer)
+start_Button = Button(50, 50, 200, 50, "Start", color=Colors.GREEN, action=start_game)
+options_Button = Button(gl.width - 250, 50, 200, 50, "Optionen", color=Colors.YELLOW, action=options)
+multiplayer_Button = Button(50, gl.height - 100, 200, 50, "Mehrspieler", color=Colors.BLUE, action=multiplayer)
+quit_Button = Button(gl.width - 250, gl.height - 100, 200, 50, "Beenden", color=Colors.WHITE, action=sys.exit)
 
-buttons = [start_Button, options_Button, multiplayer_Button]
+buttons = [start_Button, options_Button, multiplayer_Button, quit_Button]
 
 # TODO: Hier soll das Menu implementiert werden, also verschiedene Knoepfe fuer Singleplayer, Multiplayer, Einstellungen etc.
 class Menu:
@@ -37,7 +37,7 @@ class Menu:
     background_image = pygame.image.load("assets/racer.jpg")
 
     def __init__(self):
-        self.screen = pygame.display.set_mode([width, height])
+        gl.screen = pygame.display.set_mode([gl.width, gl.height])
         pygame.display.set_caption(title)
         self.menu_loop()
 
@@ -57,10 +57,9 @@ class Menu:
                                     button.action()
 
 
-            self.screen.blit(self.background_image, (0, 0))
+            gl.screen.blit(self.background_image, (0, 0))
 
             for button in buttons:
-                button.draw(self.screen)
+                button.draw(gl.screen)
 
             pygame.display.flip()
-
