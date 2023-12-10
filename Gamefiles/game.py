@@ -93,10 +93,19 @@ class Game:
         if (gl.playerX < -1 or gl.playerX > 1) and (gl.speed > gl.offRoadLimit):
             gl.speed = Util.accelerate(gl.speed, gl.offRoadDecel, gl.DT)
 
-        gl.playerX = Util.limit(gl.playerX, -2, 2)
-        gl.speed = Util.limit(gl.speed, 0, gl.maxSpeed)
 
         AI.update_cars(dt, current_segment, gl.playerw)
+
+        for car in current_segment.get("cars"):
+            carW = car.get("z") * ((1/80) * 0.3)
+            if gl.speed > car.get("speed"):
+                if Util.overlap(gl.playerX, gl.playerw, car.get("offset"), carW, 0.8):
+                    gl.speed = car.get("speed") * (car.get("speed") / gl.speed)
+                    gl.position = Util.increase(car.get("z"), -gl.playerZ, gl.trackLength)
+                    break
+
+        gl.playerX = Util.limit(gl.playerX, -2, 2)
+        gl.speed = Util.limit(gl.speed, 0, gl.maxSpeed)
 
         # Fast alles bezueglich Zeit wurde jetzt nach Util verlagert
         Util.check_time(start_position)
