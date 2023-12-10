@@ -93,7 +93,6 @@ class Game:
         if (gl.playerX < -1 or gl.playerX > 1) and (gl.speed > gl.offRoadLimit):
             gl.speed = Util.accelerate(gl.speed, gl.offRoadDecel, gl.DT)
 
-
         AI.update_cars(dt, current_segment, gl.playerw)
 
         for car in current_segment.get("cars"):
@@ -102,6 +101,7 @@ class Game:
                 if Util.overlap(gl.playerX, gl.playerw, car.get("offset"), carW, 0.8):
                     gl.speed = car.get("speed") * (car.get("speed") / gl.speed)
                     gl.position = Util.increase(car.get("z"), -gl.playerZ, gl.trackLength)
+                    # Irgendwas hier funktioniert noch nicht richtig
                     break
 
         gl.playerX = Util.limit(gl.playerX, -2, 2)
