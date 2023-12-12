@@ -19,5 +19,10 @@ class Sprites:
     # Platziert den Spieler in der Mitte der Strecke und ordnet ihm die Auto-Sprites zu
     @staticmethod
     def create_player():
-        gl.player = Player(gl.screen.get_width() / 2 - 30, gl.screen.get_height() - 100)
+        gl.player = Player(gl.screen.get_width() / 2 - 200, gl.screen.get_height() - 100)
         gl.player_sprites.add(gl.player)
+
+    @staticmethod
+    def create_player2():
+        gl.player2 = Player(gl.screen.get_width() / 2 + 100, gl.screen.get_height() - 100)
+        gl.player_sprites2.add(gl.player2)

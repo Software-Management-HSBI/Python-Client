@@ -1,17 +1,26 @@
 import globals as gl
 from Gamefiles.util import Util
 
+
 class Render:
 
     @staticmethod
     def render():
         base = Util.which_segment(gl.position)
+        base2 = Util.which_segment(gl.position2)
         base_percent = Util.percent_remaining(gl.position, gl.segmentLength)
+        base_percent_2 = Util.percent_remaining(gl.position2, gl.segmentLength)
         current_segment = Util.which_segment(gl.position + gl.playerZ)
+        current_segment2 = Util.which_segment(gl.position2 + gl.playerZ2)
         current_percent = Util.percent_remaining(gl.position + gl.playerZ, gl.segmentLength)
-        playerY = Util.interpolate(current_segment.get("p1").get("world").get("y"), current_segment.get("p2").get("world").get("y"), current_percent)
+        current_percent2 = Util.percent_remaining(gl.position2 + gl.playerZ2, gl.segmentLength)
+        playerY = Util.interpolate(current_segment.get("p1").get("world").get("y"),
+                                   current_segment.get("p2").get("world").get("y"), current_percent)
+        playerY2 = Util.interpolate(current_segment2.get("p1").get("world").get("y"),
+                                    current_segment2.get("p2").get("world").get("y"), current_percent2)
 
         dx = -(base.get("curve") * base_percent)
+        dx2 = -(base2.get("curve") * base_percent_2)
         x = 0
         maxY = gl.height
 
@@ -39,13 +48,13 @@ class Render:
 
             segment["p2"] = Util.project(
                 segment.get("p2"),
-                (gl.playerX * gl.roadWidth) -x - dx,
+                (gl.playerX * gl.roadWidth) - x - dx,
                 playerY + gl.cameraHeight,
                 gl.position - segment_looped_value,
                 gl.cameraDepth,
                 gl.width, gl.height,
                 gl.roadWidth)
-            
+
             x += dx
             dx += segment.get("curve")
 
@@ -55,14 +64,16 @@ class Render:
                 continue
 
             Util.segment(gl.screen, gl.width, gl.lanes,
-                        segment.get("p1").get("screen").get("x"),
-                        segment.get("p1").get("screen").get("y"),
-                        segment.get("p1").get("screen").get("w"),
-                        segment.get("p2").get("screen").get("x"),
-                        segment.get("p2").get("screen").get("y"),
-                        segment.get("p2").get("screen").get("w"),
-                        segment.get("color"), segment_fog)
+                         segment.get("p1").get("screen").get("x"),
+                         segment.get("p1").get("screen").get("y"),
+                         segment.get("p1").get("screen").get("w"),
+                         segment.get("p2").get("screen").get("x"),
+                         segment.get("p2").get("screen").get("y"),
+                         segment.get("p2").get("screen").get("w"),
+                         segment.get("color"), segment_fog)
 
             maxY = segment.get("p1").get("screen").get("y")
 
-            gl.player_sprites.draw(gl.screen)   
+            gl.player_sprites.draw(gl.screen)
+            gl.player_sprites2.draw(gl.screen)
+

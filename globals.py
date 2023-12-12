@@ -9,11 +9,16 @@ STEP = 1/FPS
 DT = STEP
 
 width = 1024
+width2 = width // 2
 height = 768
+
+player1_rect = pygame.Rect(0, 0, width2, height)
+player2_rect = pygame.Rect(width // 2, 0, width2, height)
 
 segments = []
 
-screen = None
+screen1 = None
+screen2 = None
 background = None
 sprites = None
 resolution = None
@@ -31,11 +36,15 @@ cameraHeight = 1000
 cameraDepth = 1 / math.tan((fov / 2) * math.pi / 180)
 drawDistance = 300
 playerX = 0
+playerX2 = 0
 playerZ = cameraHeight * cameraDepth
+playerZ2 = cameraHeight * cameraDepth
 fogDensity = 10
 
 position = 0
+position2= 0
 speed = 0
+speed2 = 0
 maxSpeed = segmentLength/STEP
 accel = maxSpeed/5 - 10
 breaking = -maxSpeed
@@ -52,6 +61,11 @@ keyRight = False
 keyFaster = False
 keySlower = False
 
+keyLeft2 = False
+keyRight2 = False
+keyFaster2 = False
+keySlower2 = False
+
 current_lap_time = 0
 last_lap_time = 0
 best_lap_time = float('inf')
@@ -59,7 +73,9 @@ font = pygame.font.SysFont(None, 36)
 lap_start_time = 0
 
 player = None
+player2 = None
 player_sprites = None
+player_sprites2 = None
 background_sprites = None
 
 clock = pygame.time.Clock()
