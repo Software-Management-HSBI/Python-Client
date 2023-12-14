@@ -1,6 +1,7 @@
 import globals as gl
 from Gamefiles.util import Util
 
+
 class Render:
 
     @staticmethod
@@ -9,7 +10,8 @@ class Render:
         base_percent = Util.percent_remaining(gl.position, gl.segmentLength)
         current_segment = Util.which_segment(gl.position + gl.playerZ)
         current_percent = Util.percent_remaining(gl.position + gl.playerZ, gl.segmentLength)
-        playerY = Util.interpolate(current_segment.get("p1").get("world").get("y"), current_segment.get("p2").get("world").get("y"), current_percent)
+        playerY = Util.interpolate(current_segment.get("p1").get("world").get("y"),
+                                   current_segment.get("p2").get("world").get("y"), current_percent)
 
         dx = -(base.get("curve") * base_percent)
         x = 0
@@ -39,13 +41,13 @@ class Render:
 
             segment["p2"] = Util.project(
                 segment.get("p2"),
-                (gl.playerX * gl.roadWidth) -x - dx,
+                (gl.playerX * gl.roadWidth) - x - dx,
                 playerY + gl.cameraHeight,
                 gl.position - segment_looped_value,
                 gl.cameraDepth,
                 gl.width, gl.height,
                 gl.roadWidth)
-            
+
             x += dx
             dx += segment.get("curve")
 
@@ -55,17 +57,17 @@ class Render:
                 continue
 
             Util.segment(gl.screen, gl.width, gl.lanes,
-                        segment.get("p1").get("screen").get("x"),
-                        segment.get("p1").get("screen").get("y"),
-                        segment.get("p1").get("screen").get("w"),
-                        segment.get("p2").get("screen").get("x"),
-                        segment.get("p2").get("screen").get("y"),
-                        segment.get("p2").get("screen").get("w"),
-                        segment.get("color"), segment_fog)
+                         segment.get("p1").get("screen").get("x"),
+                         segment.get("p1").get("screen").get("y"),
+                         segment.get("p1").get("screen").get("w"),
+                         segment.get("p2").get("screen").get("x"),
+                         segment.get("p2").get("screen").get("y"),
+                         segment.get("p2").get("screen").get("w"),
+                         segment.get("color"), segment_fog)
 
             maxY = segment.get("p1").get("screen").get("y")
 
-        for n in range(gl.drawDistance -1, 0, -1):
+        for n in range(gl.drawDistance - 1, 0, -1):
             segment = gl.segments[(base.get("index") + n) % len(gl.segments)]
             Render.render_sprites(segment)
             Render.render_cars(segment)
@@ -97,7 +99,8 @@ class Render:
         for i in range(len(segment.get("sprites"))):
             sprite = segment.get("sprites")[i]
             sprite_scale = segment.get("p1").get("screen").get("scale")
-            sprite_x = segment.get("p1").get("screen").get("x") + (sprite_scale * sprite.get("offset") * gl.roadWidth * gl.width / 2)
+            sprite_x = segment.get("p1").get("screen").get("x") + (
+                        sprite_scale * sprite.get("offset") * gl.roadWidth * gl.width / 2)
             sprite_y = segment.get("p1").get("screen").get("y")
 
             if sprite.get("offset") < 0:
@@ -105,4 +108,5 @@ class Render:
             else:
                 offset = 0
 
-            Util.sprite(gl.screen, gl.width, gl.roadWidth, sprite.get("source"), sprite_scale, sprite_x, sprite_y, offset, -1, segment.get("clip"))
+            Util.sprite(gl.screen, gl.width, gl.roadWidth, sprite.get("source"), sprite_scale, sprite_x, sprite_y,
+                        offset, -1, segment.get("clip"))

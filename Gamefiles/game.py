@@ -10,6 +10,7 @@ from Gamefiles.carAI import AI
 
 import globals as gl
 
+
 # Der Teil des Singleplayers, der alle anderen aktiviert: Hier werden Tasteneingaben überprüft und die Straße unendlich erweitert
 class Game:
 
@@ -60,15 +61,19 @@ class Game:
 
             gl.clock.tick(gl.FPS)
 
-
     # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
     def update(self, dt):
+        sprite_scale = ((1 / 80) * 0.3)
+
         start_position = gl.position
 
-        gl.position = Util.increase(gl.position, dt * gl.speed, gl.trackLength)
         current_segment = Util.which_segment(gl.position + gl.playerZ)
 
         tilt = dt * 2 * (gl.speed / gl.maxSpeed)
+
+        AI.update_cars(dt, current_segment, gl.playerw)
+
+        gl.position = Util.increase(gl.position, dt * gl.speed, gl.trackLength)
 
         if gl.keyLeft:
             gl.playerX = gl.playerX - tilt
@@ -90,16 +95,22 @@ class Game:
         else:
             gl.speed = Util.accelerate(gl.speed, gl.decel, gl.DT)
 
-        if (gl.playerX < -1 or gl.playerX > 1) and (gl.speed > gl.offRoadLimit):
-            gl.speed = Util.accelerate(gl.speed, gl.offRoadDecel, gl.DT)
+        if gl.playerX < -1 or gl.playerX > 1:
+            if gl.speed > gl.offRoadLimit:
+                gl.speed = Util.accelerate(gl.speed, gl.offRoadDecel, gl.DT)
 
-        AI.update_cars(dt, current_segment, gl.playerw)
+            # TODO: Klappt noch nicht so richtig, der findet wohl "width" nicht.
+            for obstacle in current_segment.get("sprites"):
+                obstacleW = obstacle.get("width") * sprite_scale
+                if Util.overlap(gl.playerX, gl.playerw, obstacle.get("offset") + obstacleW/2 * (1 if obstacle.get("offset") > 0 else -1), obstacleW):
+                    gl.speed = gl.maxSpeed / 5
+                    gl.position = Util.increase(current_segment.get("p1").get("world").get("z"), -gl.playerZ, gl.trackLength)
 
         for car in current_segment.get("cars"):
-            carW = car.get("z") * ((1/80) * 0.3)
+            carW = car.get("z") * sprite_scale
             if gl.speed > car.get("speed"):
                 if Util.overlap(gl.playerX, gl.playerw, car.get("offset"), carW, 0.8):
-                    gl.speed = car.get("speed") * (car.get("speed") / gl.speed)
+                    gl.speed = gl.maxSpeed / 5
                     gl.position = Util.increase(car.get("z"), -gl.playerZ, gl.trackLength)
                     # Irgendwas hier funktioniert noch nicht richtig
                     break
@@ -111,4 +122,3 @@ class Game:
         Util.check_time(start_position)
 
         Util.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)
-
