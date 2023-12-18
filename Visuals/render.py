@@ -1,4 +1,5 @@
 import globals as gl
+import pygame
 from Gamefiles.util import Util
 
 class Render:
@@ -65,4 +66,67 @@ class Render:
 
             maxY = segment.get("p1").get("screen").get("y")
 
-            gl.player_sprites.draw(gl.screen)   
+        for n in range(gl.drawDistance -1, 0, -1):
+            segment = gl.segments[(base.get("index") + n) % len(gl.segments)]
+            Render.render_sprites(segment)
+            Render.render_cars(segment)
+            Render.render_players(segment)
+
+        gl.player_sprites.draw(gl.screen)
+
+    @staticmethod
+    def render_cars(segment):
+        for i in range(len(segment.get("cars"))):
+            car = segment.get("cars")[i]
+            sprite = car.get("sprite")
+            car["percent"] = Util.percent_remaining(car.get("z"), gl.segmentLength)
+
+            sprite_scale = Util.interpolate(segment.get("p1").get("screen").get("scale"),
+                                            segment.get("p2").get("screen").get("scale"), car.get("percent"))
+
+            sprite_x = Util.interpolate(segment.get("p1").get("screen").get("x"),
+                                        segment.get("p2").get("screen").get("x"), car.get("percent")) + (
+                               sprite_scale * car.get("offset") * gl.roadWidth * (gl.width / 2))
+
+            sprite_y = Util.interpolate(segment.get("p1").get("screen").get("y"),
+                                        segment.get("p2").get("screen").get("y"), car.get("percent"))
+
+            Util.sprite(gl.screen, gl.width, gl.roadWidth, sprite, sprite_scale, sprite_x,
+                        sprite_y, -0.5, -1, segment.get("clip"))
+
+    @staticmethod
+    # Réplica do `render_cars`, não deu certo assim mas pode ser reaproveitado pra renderizar os jogadores
+    # Precisamos entender como funciona essa lógica dos segments, porcentagens e Z do carro pra poder exibir eles de forma apropriada
+    def render_players(segment):
+        for i in range(len(segment.get("players"))):
+            car = segment.get("players")[i]
+            sprite = pygame.image.load("assets/player_straight.png").convert_alpha()
+            car["percent"] = Util.percent_remaining(car.get("z"), gl.segmentLength)
+
+            sprite_scale = Util.interpolate(segment.get("p1").get("screen").get("scale"),
+                                            segment.get("p2").get("screen").get("scale"), car.get("percent"))
+
+            sprite_x = Util.interpolate(segment.get("p1").get("screen").get("x"),
+                                        segment.get("p2").get("screen").get("x"), car.get("percent")) + (
+                               sprite_scale * car.get("offset") * gl.roadWidth * (gl.width / 2))
+
+            sprite_y = Util.interpolate(segment.get("p1").get("screen").get("y"),
+                                        segment.get("p2").get("screen").get("y"), car.get("percent"))
+
+            Util.sprite(gl.screen, gl.width, gl.roadWidth, sprite, sprite_scale, sprite_x,
+                        sprite_y, -0.5, -1, segment.get("clip"))
+
+    @staticmethod
+    def render_sprites(segment):
+        for i in range(len(segment.get("sprites"))):
+            sprite = segment.get("sprites")[i]
+            sprite_scale = segment.get("p1").get("screen").get("scale")
+            sprite_x = segment.get("p1").get("screen").get("x") + (sprite_scale * sprite.get("offset") * gl.roadWidth * gl.width / 2)
+            sprite_y = segment.get("p1").get("screen").get("y")
+
+            if sprite.get("offset") < 0:
+                offset = -1
+            else:
+                offset = 0
+
+            Util.sprite(gl.screen, gl.width, gl.roadWidth, sprite.get("source"), sprite_scale, sprite_x, sprite_y, offset, -1, segment.get("clip"))

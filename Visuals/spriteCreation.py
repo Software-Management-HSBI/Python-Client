@@ -1,11 +1,17 @@
+import math
+import random
+
 import globals as gl
 import pygame
 
 from Visuals.player import Player
 from Visuals.background import Background
+from Gamefiles.util import Util
+from Visuals.sprites import Sprite
+
 
 class Sprites:
-     # Erstellt mit einer Hilfsklasse die einzelnen Hintergrundschichten
+    # Erstellt mit einer Hilfsklasse die einzelnen Hintergrundschichten
     @staticmethod
     def create_background():
         surface_sky = Background(0, pygame.image.load("assets/sky.png"))
@@ -21,3 +27,36 @@ class Sprites:
     def create_player():
         gl.player = Player(gl.screen.get_width() / 2 - 30, gl.screen.get_height() - 100)
         gl.player_sprites.add(gl.player)
+
+    @staticmethod
+    def create_remote_player():
+        gl.player_sprites.add(Player(gl.screen.get_width() / 2 - 30, gl.screen.get_height() - 100))
+
+    @staticmethod
+    def create_obstacles():
+        for i in range(0, len(gl.segments), 100):
+            Sprites.add_sprite(i, Sprite.create_tree(), -1)
+            Sprites.add_sprite(i, Sprite.create_billboard(), -1)
+
+
+    @staticmethod
+    def create_bots():
+        for n in range(gl.car_amount):
+            offset = random.random() * Util.random_choice([-0.5, 0.5])
+            z = math.floor(random.random() * len(gl.segments) * gl.segmentLength)
+            sprite = Sprite.get_car()
+            speed = gl.maxSpeed / 4 + random.random() * gl.maxSpeed / 2
+            car = {"offset": offset, "z": z, "sprite": sprite, "speed": speed, "percent": 0}
+            segment = Util.which_segment(z)
+            segment["cars"].append(car)
+            gl.cars.append(car)
+
+
+    @staticmethod
+    def add_sprite(n, sprite, offset):
+        gl.segments[n]["sprites"].append({"source": sprite, "offset": offset})
+
+
+# car["offset"] = car.get("offset") + hel
+            # car["z"] = Util.increase(car.get("z"), dt * car.get("speed"), gl.trackLength)
+            # car["percent"] = Util.percent_remaining(car.get("z"), gl.segmentLength)

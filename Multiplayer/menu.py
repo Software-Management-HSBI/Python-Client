@@ -1,6 +1,8 @@
 import pygame
 import sys
 
+import globals as gl
+
 from Multiplayer.button import Button
 from Multiplayer.client import Client
 from Gamefiles.game import Game
@@ -9,6 +11,7 @@ from Visuals.colors import Colors
 import globals as gl
 
 client = Client()
+game = None
 
 # In diesen Methoden werden unsere Aufrufe fuer die verschiedenen Modi aufgerufen, sie sind die Aktionen der Buttons
 # TODO: Das ist alles noch etwas Spaghetti-Code-Artig, irgendwie refactoren.
@@ -20,7 +23,7 @@ def options():
     pass
 
 def multiplayer():
-    pass
+    client.init(Game)
 
 title = "Wakaliwood Gaming"
 
@@ -40,6 +43,7 @@ class Menu:
         gl.screen = pygame.display.set_mode([gl.width, gl.height])
         pygame.display.set_caption(title)
         self.menu_loop()
+        self.game = False
 
     # Hier soll ueberprueft werden, ob ein neuer Modus ausgewaehlt wurde. Default ist immer das Main-Menu
     def menu_loop(self):
@@ -49,6 +53,9 @@ class Menu:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
+                elif event.type == gl.CONNECTED:
+                    # Inicia o jogo no "modo multiplayer"
+                    self.game = Game(client.sio.sid, client)
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         for button in buttons:
