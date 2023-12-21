@@ -9,11 +9,11 @@ class Sprite:
         if i == 0:
             car = {"asset": "assets/npc/car01.png", "width": 80, "height": 56}
         elif i == 1:
-            car = {"asset": "assets/npc/car02.png", "width": 80, "height": 56}
+            car = {"asset": "assets/npc/car02.png", "width": 80, "height": 59}
         elif i == 2:
-            car = {"asset": "assets/npc/car03.png", "width": 80, "height": 56}
+            car = {"asset": "assets/npc/car03.png", "width": 88, "height": 55}
         elif i == 3:
-            car = {"asset": "assets/npc/car04.png", "width": 80, "height": 56}
+            car = {"asset": "assets/npc/car04.png", "width": 80, "height": 57}
         else:
             car = {"asset": "assets/npc/car01.png", "width": 80, "height": 56}
 

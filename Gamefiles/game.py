@@ -101,7 +101,7 @@ class Game:
 
             # TODO: Klappt noch nicht so richtig, der findet wohl "width" nicht.
             for obstacle in current_segment.get("sprites"):
-                obstacleW = obstacle.get("width") * sprite_scale
+                obstacleW = 250 * sprite_scale # 250 ist jetzt hier, weil obstacle.get() irgendwie nicht klappen wollte
                 if Util.overlap(gl.playerX, gl.playerw, obstacle.get("offset") + obstacleW/2 * (1 if obstacle.get("offset") > 0 else -1), obstacleW):
                     gl.speed = gl.maxSpeed / 5
                     gl.position = Util.increase(current_segment.get("p1").get("world").get("z"), -gl.playerZ, gl.trackLength)

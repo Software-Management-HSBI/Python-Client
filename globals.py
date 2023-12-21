@@ -34,7 +34,7 @@ drawDistance = 300
 playerX = 0
 playerZ = cameraHeight * cameraDepth
 fogDensity = 10
-playerw = ((1/80) * 0.3) * 80
+playerw = 0.3
 
 position = 0
 speed = 0
