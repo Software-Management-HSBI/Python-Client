@@ -31,8 +31,10 @@ class Sprites:
     @staticmethod
     def create_obstacles(segments):
         for i in range(0, len(segments), 100):
-            Sprites.add_sprite(segments, i, Sprite.create_tree(), 1)
-            Sprites.add_sprite(segments, i, Sprite.create_billboard(), -1)
+            direction = random.choice([1, -1])
+
+            Sprites.add_sprite(segments, i, Sprite.create_tree(), direction)
+            Sprites.add_sprite(segments, i, Sprite.create_billboard(), -direction)
 
     @staticmethod
     def create_bots():
