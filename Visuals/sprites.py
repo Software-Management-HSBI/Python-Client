@@ -39,22 +39,23 @@ class Sprite:
         if i == 0:
             billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": -1}
         elif i == 1:
-            billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": 1}
+            billboard = {"asset": "assets/billboard/billboard02.png", "width": 360, "height": 360, "offset": 1}
         elif i == 2:
-            billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": -1}
+            billboard = {"asset": "assets/billboard/billboard03.png", "width": 360, "height": 360, "offset": -1}
         elif i == 3:
-            billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": 1}
+            billboard = {"asset": "assets/billboard/billboard04.png", "width": 360, "height": 360, "offset": 1}
         elif i == 4:
-            billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": -1}
+            billboard = {"asset": "assets/billboard/billboard05.png", "width": 360, "height": 360, "offset": -1}
         elif i == 5:
-            billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": 1}
+            billboard = {"asset": "assets/billboard/billboard06.png", "width": 360, "height": 360, "offset": 1}
         elif i == 6:
-            billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": -1}
+            billboard = {"asset": "assets/billboard/billboard07.png", "width": 360, "height": 360, "offset": -1}
         elif i == 7:
-            billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": 1}
+            billboard = {"asset": "assets/billboard/billboard08.png", "width": 360, "height": 360, "offset": 1}
         elif i == 8:
-            billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": -1}
+            billboard = {"asset": "assets/billboard/billboard09.png", "width": 360, "height": 360, "offset": -1}
         else:
             billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": 1}
 
         return billboard
+

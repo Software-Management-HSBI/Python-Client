@@ -29,11 +29,10 @@ class Sprites:
         gl.player_sprites.add(gl.player)
 
     @staticmethod
-    def create_obstacles():
-        for i in range(0, len(gl.segments), 100):
-            Sprites.add_sprite(i, Sprite.create_tree(), -1)
-            Sprites.add_sprite(i, Sprite.create_billboard(), -1)
-
+    def create_obstacles(segments):
+        for i in range(0, len(segments), 100):
+            Sprites.add_sprite(segments, i, Sprite.create_tree(), 1)
+            Sprites.add_sprite(segments, i, Sprite.create_billboard(), -1)
 
     @staticmethod
     def create_bots():
@@ -47,7 +46,6 @@ class Sprites:
             segment["cars"].append(car)
             gl.cars.append(car)
 
-
     @staticmethod
-    def add_sprite(n, sprite, offset):
-        gl.segments[n]["sprites"].append({"source": sprite, "offset": offset})
+    def add_sprite(segments, n, sprite, offset):
+        segments[n]["sprites"].append({"source": sprite, "offset": offset})

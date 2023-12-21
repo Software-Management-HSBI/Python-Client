@@ -14,7 +14,7 @@ class Road:
 
         Road.read_road()
         Sprites.create_bots()
-        Sprites.create_obstacles()
+        Sprites.create_obstacles(gl.segments)
 
         gl.segments[Util.which_segment(gl.playerZ)["index"] + 2]["color"] = Colors.get_start()
         gl.segments[Util.which_segment(gl.playerZ)["index"] + 3]["color"] = Colors.get_start()
