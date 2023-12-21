@@ -63,7 +63,6 @@ class Game:
 
     # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
     def update(self, dt):
-        sprite_scale = ((1 / 80) * 0.3)
 
         start_position = gl.position
 
@@ -101,13 +100,13 @@ class Game:
 
             # TODO: Klappt noch nicht so richtig, der findet wohl "width" nicht.
             for obstacle in current_segment.get("sprites"):
-                obstacleW = 250 * sprite_scale # 250 ist jetzt hier, weil obstacle.get() irgendwie nicht klappen wollte
+                obstacleW = 250 * gl.playerw # 250 ist jetzt hier, weil obstacle.get() irgendwie nicht klappen wollte
                 if Util.overlap(gl.playerX, gl.playerw, obstacle.get("offset") + obstacleW/2 * (1 if obstacle.get("offset") > 0 else -1), obstacleW):
                     gl.speed = gl.maxSpeed / 5
                     gl.position = Util.increase(current_segment.get("p1").get("world").get("z"), -gl.playerZ, gl.trackLength)
 
         for car in current_segment.get("cars"):
-            carW = car.get("z") * sprite_scale
+            carW = gl.playerw
             if gl.speed > car.get("speed"):
                 if Util.overlap(gl.playerX, gl.playerw, car.get("offset"), carW, 0.8):
                     gl.speed = gl.maxSpeed / 5
