@@ -37,7 +37,7 @@ class Sprite:
     def create_billboard():
         i = random.randint(0, 8)
         if i == 0:
-            billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": -1}
+            billboard = {"asset": "assets/billboard/BetterCallSus.jpg", "width": 360, "height": 360, "offset": -1}
         elif i == 1:
             billboard = {"asset": "assets/billboard/billboard02.png", "width": 360, "height": 360, "offset": 1}
         elif i == 2:
@@ -55,7 +55,7 @@ class Sprite:
         elif i == 8:
             billboard = {"asset": "assets/billboard/billboard09.png", "width": 360, "height": 360, "offset": -1}
         else:
-            billboard = {"asset": "assets/billboard/billboard01.png", "width": 360, "height": 360, "offset": 1}
+            billboard = {"asset": "assets/billboard/BetterCallSus.jpg", "width": 360, "height": 360, "offset": 1}
 
         return billboard
 
