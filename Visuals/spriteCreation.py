@@ -11,6 +11,7 @@ from Visuals.sprites import Sprite
 
 
 class Sprites:
+
     # Erstellt mit einer Hilfsklasse die einzelnen Hintergrundschichten
     @staticmethod
     def create_background():
@@ -28,12 +29,11 @@ class Sprites:
         gl.player = Player(gl.screen.get_width() / 2 - 30, gl.screen.get_height() - 100)
         gl.player_sprites.add(gl.player)
 
-    # Erstellt Trees und Billboards in 100er-Abstaenden
+    # Erstellt Trees und Billboards in zufaelligen Abstaenden
     @staticmethod
     def create_obstacles(segments):
-        for i in range(0, len(segments), 100):
+        for i in range(0, len(segments), random.choice([50, 75, 100, 125])):
             direction = random.choice([1, -1])
-
             Sprites.add_sprite(segments, i, Sprite.create_tree(), direction)
             Sprites.add_sprite(segments, i, Sprite.create_billboard(), -direction)
 

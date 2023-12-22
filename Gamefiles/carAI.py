@@ -2,8 +2,10 @@ import globals as gl
 from Gamefiles.util import Util
 
 
+# Zustaendig fuer das Verhalten der NPC-Autos; Hier werden sie innerhalb und ausserhalb des Sichtfelds geupdated
 class AI:
 
+    # Updatet die NPC-Autos in dem Sichtfeld des Spielers (groesstenteils wie in JS)
     @staticmethod
     def update_cars(dt, player_segment, playerw):
         for n in range(len(gl.cars)):
@@ -22,18 +24,19 @@ class AI:
                 old_segment.get("cars").pop(index)
                 new_segment.get("cars").append(car)
 
-
+    # Updated die Autos, wenn sie nicht im
     @staticmethod
     def update_offset(car, car_segment, player_segment, playerw):
         ahead = 20
-        carw = car.get("sprite").get("width") * ((1/80) * 0.3)
+        carw = car.get("sprite").get("width") * gl.playerw
 
         if (car_segment.get("index") - player_segment.get("index")) > gl.drawDistance:
             return 0
         for i in range(1, ahead):
             segment = gl.segments[(car_segment.get("index") + i) % len(gl.segments)]
 
-            if (segment == player_segment) and (car.get("speed") > gl.speed) and (Util.overlap(gl.playerX, playerw, car.get("offset"), carw, 1.2)):
+            if ((segment == player_segment) and (car.get("speed") > gl.speed) and
+                    (Util.overlap(gl.playerX, playerw, car.get("offset"), carw, 1.2))):
                 if gl.playerX > 0.5:
                     direction = -1
                 elif gl.playerX < -0.5:
