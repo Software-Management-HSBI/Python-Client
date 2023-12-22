@@ -236,3 +236,25 @@ class Util:
         min2 = x2 - (w2 * half)
         max2 = x2 + (w2 * half)
         return not ((max1 < min2) or (min1 > max2))
+
+    # Ueberprueft Kollision mit Objekten seitlich der Straße und haelt das Auto bei Kollision komplett an
+    @staticmethod
+    def obstacle_collision(current_segment):
+        for obstacle in current_segment.get("sprites"):
+            obstacleW = 200 * gl.playerw
+            if Util.overlap(gl.playerX, gl.playerw,
+                            obstacle.get("offset") + obstacleW / 2 * (1 if obstacle.get("offset") > 0 else -1),
+                            obstacleW):
+                gl.speed = gl.maxSpeed / 5
+                gl.position = Util.increase(current_segment.get("p1").get("world").get("z"), -gl.playerZ,
+                                            gl.trackLength)
+
+    # Ueberprueft Kollision mit anderen Autos und verlangsamt den Spieler, falls notwendig
+    @staticmethod
+    def car_collision(current_segment):
+        for car in current_segment.get("cars"):
+            if gl.speed > car.get("speed"):
+                if Util.overlap(gl.playerX, gl.playerw, car.get("offset"), gl.playerw, 0.8):
+                    gl.speed = gl.maxSpeed / 5
+                    gl.position = Util.increase(car.get("z"), -gl.playerZ, gl.trackLength)
+                    break

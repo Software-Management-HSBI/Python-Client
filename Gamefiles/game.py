@@ -98,21 +98,9 @@ class Game:
             if gl.speed > gl.offRoadLimit:
                 gl.speed = Util.accelerate(gl.speed, gl.offRoadDecel, gl.DT)
 
-            # TODO: Klappt noch nicht so richtig, der findet wohl "width" nicht.
-            for obstacle in current_segment.get("sprites"):
-                obstacleW = 250 * gl.playerw # 250 ist jetzt hier, weil obstacle.get() irgendwie nicht klappen wollte
-                if Util.overlap(gl.playerX, gl.playerw, obstacle.get("offset") + obstacleW/2 * (1 if obstacle.get("offset") > 0 else -1), obstacleW):
-                    gl.speed = gl.maxSpeed / 5
-                    gl.position = Util.increase(current_segment.get("p1").get("world").get("z"), -gl.playerZ, gl.trackLength)
+            Util.obstacle_collision(current_segment)
 
-        for car in current_segment.get("cars"):
-            carW = gl.playerw
-            if gl.speed > car.get("speed"):
-                if Util.overlap(gl.playerX, gl.playerw, car.get("offset"), carW, 0.8):
-                    gl.speed = gl.maxSpeed / 5
-                    gl.position = Util.increase(car.get("z"), -gl.playerZ, gl.trackLength)
-                    # Irgendwas hier funktioniert noch nicht richtig
-                    break
+        Util.car_collision(current_segment)
 
         gl.playerX = Util.limit(gl.playerX, -2, 2)
         gl.speed = Util.limit(gl.speed, 0, gl.maxSpeed)
