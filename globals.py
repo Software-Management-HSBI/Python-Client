@@ -47,7 +47,7 @@ offRoadLimit = maxSpeed / 4  # Hoechstgeschwindigkeit auf Gras
 # Beeinflusst das Verhalten des Autos in der Kurve; Je groesser der Wert, desto schwieriger die Lenkung
 centrifugal = 0.3
 cars = []  # Sammlung aller NPC-Autos
-car_amount = 25  # Menger der NPCs
+car_amount = 25  # Menge der NPCs
 
 keyLeft = False
 keyRight = False

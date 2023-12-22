@@ -96,8 +96,10 @@ class Game:
         if gl.playerX < -1 or gl.playerX > 1:
             if gl.speed > gl.offRoadLimit:
                 gl.speed = Util.accelerate(gl.speed, gl.offRoadDecel, gl.DT)
-            Util.obstacle_collision(current_segment)
-        Util.car_collision(current_segment)
+
+            Util.obstacle_collision(current_segment)  # Kollision mit Hindernissen
+
+        Util.car_collision(current_segment)  # Kollision mit Autos
 
         gl.playerX = Util.limit(gl.playerX, -2, 2)
         gl.speed = Util.limit(gl.speed, 0, gl.maxSpeed)

@@ -24,7 +24,7 @@ class AI:
                 old_segment.get("cars").pop(index)
                 new_segment.get("cars").append(car)
 
-    # Updated die Autos, wenn sie nicht im
+    # Updated die Autos, wenn sie nicht im Sichtfeld des Spielers sind
     @staticmethod
     def update_offset(car, car_segment, player_segment, playerw):
         ahead = 20

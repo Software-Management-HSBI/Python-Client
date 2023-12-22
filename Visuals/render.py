@@ -2,6 +2,7 @@ import globals as gl
 from Gamefiles.util import Util
 
 
+# Erstellt alles graphische, ist im Grunde das gleiche wie in JS
 class Render:
 
     @staticmethod
