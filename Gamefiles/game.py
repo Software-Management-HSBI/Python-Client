@@ -63,14 +63,15 @@ class Game:
             gl.clock.tick(gl.FPS)
 
     # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
-    def update(self, dt):
+    @staticmethod
+    def update(dt):
 
         start_position = gl.position  # Position zum Start der Methode, nicht generelle 1. Position
         current_segment = Util.which_segment(gl.position + gl.playerZ)
         tilt = dt * 2 * (gl.speed / gl.maxSpeed)
         gl.position = Util.increase(gl.position, dt * gl.speed, gl.trackLength)
 
-        AI.update_cars(dt, current_segment, gl.playerw)
+        AI.update_cars(dt, current_segment, gl.playerw)  # Hier werden die NPCs bewegt
 
         if gl.keyLeft:
             gl.playerX = gl.playerX - tilt

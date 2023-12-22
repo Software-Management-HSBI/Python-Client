@@ -46,7 +46,7 @@ class AI:
                         direction = 1
                     else:
                         direction = -1
-                return direction
+                return direction * 1/i * (car.get("speed") - gl.speed) / gl.maxSpeed
 
             for j in range(len(segment.get("cars"))):
                 other_car = segment.get("cars")[j]
@@ -58,7 +58,7 @@ class AI:
                     elif other_car.get("offset") < -0.5:
                         direction = 1
                     else:
-                        if car.get("offset") > car.get("offset"):
+                        if car.get("offset") > other_car.get("offset"):
                             direction = 1
                         else:
                             direction = -1
