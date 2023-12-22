@@ -217,8 +217,9 @@ class Util:
     # Zeigt aktuelle, letzte und beste Zeit an
     @staticmethod
     def update_time(current_lap_time, last_lap_time, best_lap_time):
+        formatted_time = "{:.1f}".format(current_lap_time)
         best_time_text = gl.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
-        timer_text = gl.font.render(f"Aktuelle Runde: {int(current_lap_time)} Sekunden", True, Colors.BLACK)
+        timer_text = gl.font.render(f"Aktuelle Runde: {formatted_time} Sekunden", True, Colors.BLACK)
         last_time_text = gl.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
         if not math.isinf(gl.best_lap_time):
             best_time_text = gl.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)

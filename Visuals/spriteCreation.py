@@ -28,6 +28,7 @@ class Sprites:
         gl.player = Player(gl.screen.get_width() / 2 - 30, gl.screen.get_height() - 100)
         gl.player_sprites.add(gl.player)
 
+    # Erstellt Trees und Billboards in 100er-Abstaenden
     @staticmethod
     def create_obstacles(segments):
         for i in range(0, len(segments), 100):
@@ -36,6 +37,7 @@ class Sprites:
             Sprites.add_sprite(segments, i, Sprite.create_tree(), direction)
             Sprites.add_sprite(segments, i, Sprite.create_billboard(), -direction)
 
+    # Erstellt die NPC-Autos und gibt ihnen zufaellige Position, zufaellige Sprites und zufaellige Geschwindigkeit
     @staticmethod
     def create_bots():
         for n in range(gl.car_amount):
@@ -48,6 +50,7 @@ class Sprites:
             segment["cars"].append(car)
             gl.cars.append(car)
 
+    # Hilfsmethode, um Strassenhindernisse einfacher hinzuzufuegen
     @staticmethod
     def add_sprite(segments, n, sprite, offset):
         segments[n]["sprites"].append({"source": sprite, "offset": offset})
