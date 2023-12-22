@@ -28,7 +28,7 @@ class AI:
     @staticmethod
     def update_offset(car, car_segment, player_segment, playerw):
         ahead = 20
-        carw = car.get("sprite").get("width") * gl.playerw
+        carw = gl.playerw
 
         if (car_segment.get("index") - player_segment.get("index")) > gl.drawDistance:
             return 0
