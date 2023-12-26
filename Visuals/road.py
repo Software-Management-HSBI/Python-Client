@@ -27,7 +27,6 @@ class Road:
     @staticmethod
     def add_segment(curve, y):
         n = len(gl.segments)
-        # Diese Werte muessen (hoffentlich) nicht mehr geaendert werden, jetzt wo Kurven (curve-Parameter) und Huegel (y-Parameter) benutzt werden
         gl.segments.append(
             {
                 'index': n,
