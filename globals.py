@@ -66,6 +66,8 @@ background_sprites = None
 
 clock = pygame.time.Clock()
 
+singleplayer = True  # Hierdurch erkennt man, ob man im Single- oder Multiplayer ist
+
 # Hiermit bildet man die Strasse. Es wird wahrscheinlich wichtig sein,
 # dass dieses Array genauso auch beim Java-Client aufgebaut ist.
 # 1. Variable ist Strassenlaenge, die kann man so einstellen wie man will, passt
