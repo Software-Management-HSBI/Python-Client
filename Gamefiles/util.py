@@ -1,9 +1,12 @@
 import math
+import random
+
 import pygame
 import time
 
 import globals as gl
 from Visuals.colors import Colors
+
 
 # Die Util-Klasse besitzt hauptsaechlich die Mathematik hinter dem Spiel
 class Util:
@@ -64,11 +67,11 @@ class Util:
             return 1
         else:
             return value
-        
+
     # Hilfsmethode, um das derzeit notwendige Segment auszuwaehlen
     @staticmethod
     def which_segment(n):
-         return gl.segments[math.floor(n / gl.segmentLength) % len(gl.segments)]
+        return gl.segments[math.floor(n / gl.segmentLength) % len(gl.segments)]
 
     # Methode aus dem JavaScript, die die einzelnen Strassenteile modelliert und den Nebel hinzufuegt
     @staticmethod
@@ -92,13 +95,13 @@ class Util:
 
         while lane < lanes:
             Util.polygon(screen, lanex1 - l1 / 2, y1, lanex1 + l1 / 2, y1, lanex2 + l2 / 2, y2, lanex2 - l2 / 2,
-                          y2,
-                          color.get("lane"))
+                         y2,
+                         color.get("lane"))
             lanex1 += lanew1
             lanex2 += lanew2
             lane = lane + 1
 
-        Util.fog(screen, 0, y1, width, y1-y2, fog)
+        Util.fog(screen, 0, y1, width, y1 - y2, fog)
 
     # Etwas umformulierte Variante des JavaSript-Nebels, nutzt eine Methode namens 'draw_polygon_alpha', um den Nebel richtig darzustellen
     @staticmethod
@@ -116,7 +119,6 @@ class Util:
         shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
         pygame.draw.polygon(shape_surf, color, [(x - min_x, y - min_y) for x, y in points])
         surface.blit(shape_surf, target_rect)
-
 
     @staticmethod
     def gras(screen, color, x, y, width, height):
@@ -140,9 +142,10 @@ class Util:
 
     # Aus dem JavaScript-Code, ist wahrscheinlich fuer das Darstellen von Huegeln und Sprites generell da (?)
     @staticmethod
-    def sprite(screen: pygame.Surface, width, road_width, sprite, sprite_scale, destX, destY, offset_x, offset_y, clip_y):
-        dest_w = (sprite.get("width") * sprite_scale * width / 2) * (((1/80) * 0.3) * road_width)
-        dest_h = (sprite.get("height") * sprite_scale * width / 2) * (((1/80) * 0.3) * road_width)
+    def sprite(screen: pygame.Surface, width, road_width, sprite, sprite_scale, destX, destY, offset_x, offset_y,
+               clip_y):
+        dest_w = (sprite.get("width") * sprite_scale * width / 2) * (((1 / 80) * 0.3) * road_width)
+        dest_h = (sprite.get("height") * sprite_scale * width / 2) * (((1 / 80) * 0.3) * road_width)
 
         if offset_x is None:
             offset_x = 0
@@ -157,36 +160,42 @@ class Util:
         else:
             clip_h = max(0, destY + dest_h - clip_y)
 
-        if clip_h < dest_h:
+        if clip_h < dest_h and (dest_w <= (sprite.get("width") * 5) or (dest_h <= (sprite.get("height") * 5))):
             img = pygame.image.load(sprite.get("asset")).convert()
             hill = pygame.transform.scale(img, (dest_w, dest_h))
-            hill = pygame.transform.chop(hill, (0, hill.get_height()-(hill.get_height()*clip_h/dest_h), 0, sprite.get("height")))
+            hill = pygame.transform.chop(hill, (
+            0, hill.get_height() - (hill.get_height() * clip_h / dest_h), 0, sprite.get("height")))
             screen.blit(hill, [destX, destY])
 
     # Alle 3 ease-Methoden sind fuer die Kurvenmodellierung
 
     @staticmethod
     def easeIn(a, b, percent):
-        return a + (b-a) * math.pow(percent, 2)
-    
+        return a + (b - a) * math.pow(percent, 2)
+
     @staticmethod
     def easeOut(a, b, percent):
-        return a + (b-a) * (1- math.pow(1-percent, 2))
-    
+        return a + (b - a) * (1 - math.pow(1 - percent, 2))
+
     @staticmethod
     def easeInOut(a, b, percent):
-        return a + (b-a) * ((-math.cos(percent*math.pi)/2)+0.5)
-    
-        
-    
+        return a + (b - a) * ((-math.cos(percent * math.pi) / 2) + 0.5)
+
     @staticmethod
     def percent_remaining(n, total):
         return (n % total) / total
-    
+
     @staticmethod
     def interpolate(a, b, percent):
-        return a + (b-a) * percent
-    
+        return a + (b - a) * percent
+
+    @staticmethod
+    def random_int(min, max):
+        return round(Util.interpolate(min, max, random.random()))
+
+    @staticmethod
+    def random_choice(options):
+        return options[Util.random_int(0, len(options) - 1)]
 
     # Ueberprueft, ob Runde gefahren wurde
     @staticmethod
@@ -204,15 +213,49 @@ class Util:
                 # Laesst die Zeit weiterlaufen.
                 current_time = time.time()
                 gl.current_lap_time = current_time - gl.lap_start_time
-    
+
     # Zeigt aktuelle, letzte und beste Zeit an
     @staticmethod
     def update_time(current_lap_time, last_lap_time, best_lap_time):
+        formatted_time = "{:.1f}".format(current_lap_time)
         best_time_text = gl.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
-        timer_text = gl.font.render(f"Aktuelle Runde: {int(current_lap_time)} Sekunden", True, Colors.BLACK)
+        timer_text = gl.font.render(f"Aktuelle Runde: {formatted_time} Sekunden", True, Colors.BLACK)
         last_time_text = gl.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
         if not math.isinf(gl.best_lap_time):
             best_time_text = gl.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)
         gl.screen.blit(timer_text, (10, 10))
         gl.screen.blit(last_time_text, (10, 50))
         gl.screen.blit(best_time_text, (10, 90))
+
+    @staticmethod
+    def overlap(x1, w1, x2, w2, percent=None):
+        if percent is None:
+            percent = 1
+        half = percent / 2
+        min1 = x1 - (w1 * half)
+        max1 = x1 + (w1 * half)
+        min2 = x2 - (w2 * half)
+        max2 = x2 + (w2 * half)
+        return not ((max1 < min2) or (min1 > max2))
+
+    # Ueberprueft Kollision mit Objekten seitlich der Straße und haelt das Auto bei Kollision komplett an
+    @staticmethod
+    def obstacle_collision(current_segment):
+        for obstacle in current_segment.get("sprites"):
+            obstacleW = 200 * gl.playerw
+            if Util.overlap(gl.playerX, gl.playerw,
+                            obstacle.get("offset") + obstacleW / 2 * (1 if obstacle.get("offset") > 0 else -1),
+                            obstacleW):
+                gl.speed = gl.maxSpeed / 5
+                gl.position = Util.increase(current_segment.get("p1").get("world").get("z"), -gl.playerZ,
+                                            gl.trackLength)
+
+    # Ueberprueft Kollision mit anderen Autos und verlangsamt den Spieler, falls notwendig
+    @staticmethod
+    def car_collision(current_segment):
+        for car in current_segment.get("cars"):
+            if gl.speed > car.get("speed"):
+                if Util.overlap(gl.playerX, gl.playerw, car.get("offset"), gl.playerw, 0.8):
+                    gl.speed = gl.maxSpeed / 5
+                    gl.position = Util.increase(car.get("z"), -gl.playerZ, gl.trackLength)
+                    break

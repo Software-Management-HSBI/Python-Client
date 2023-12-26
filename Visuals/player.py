@@ -1,5 +1,6 @@
 import pygame
 
+
 # Hilfsklasse, um dem Spieler-Auto die richtigen Bilder zum richtigen Zeitpunkt zuzuweisen
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -13,7 +14,6 @@ class Player(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.center = (x - self.rect.width, y - self.rect.height)
-
 
     def drive_straight(self):
         self.image = self.straight

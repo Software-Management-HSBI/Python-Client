@@ -9,7 +9,7 @@ class Colors:
     BLUE = (0, 0, 255)
     YELLOW = (255, 255, 0)
 
-
+    @staticmethod
     def get_finish():
         c = {
             "road": "#000000",
@@ -19,6 +19,7 @@ class Colors:
         }
         return c
 
+    @staticmethod
     def get_light():
         c = {
             "road": "#6B6B6B",
@@ -28,6 +29,7 @@ class Colors:
         }
         return c
 
+    @staticmethod
     def get_start():
         c = {
             "road": "#FFFFFF",
@@ -37,6 +39,7 @@ class Colors:
         }
         return c
 
+    @staticmethod
     def get_dark():
         c = {
             "road": "#696969",

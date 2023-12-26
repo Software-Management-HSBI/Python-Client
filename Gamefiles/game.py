@@ -6,10 +6,14 @@ from Gamefiles.util import Util
 from Visuals.render import Render
 from Visuals.road import Road
 from Visuals.spriteCreation import Sprites
+from Gamefiles.carAI import AI
 
 import globals as gl
 
-# Der Teil des Singleplayers, der alle anderen aktiviert: Hier werden Tasteneingaben überprüft und die Straße unendlich erweitert
+
+# Der Teil des Singleplayers, der alle anderen aktiviert:
+# Hier werden Tasteneingaben und Kollisionen des Autos #
+# mit anderen Objekten ueberprueft sowie die gefahrene Zeit geupdated
 class Game:
 
     # Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel
@@ -22,14 +26,14 @@ class Game:
         Road.reset_road()
         self.game_loop()
 
-    # Loop des Spiels: Erstellt Spieler und Hintergrund, nimmt Inputs entgegen und ruft permanent die render- und update-Methode auf
+    # Loop des Spiels: Erstellt Spieler und Hintergrund, nimmt Inputs entgegen und ruft permanent die render- und
+    # update-Methode auf
     def game_loop(self):
         Sprites.create_player()
         Sprites.create_background()
         gl.background_sprites.draw(gl.screen)
 
         while True:
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -56,18 +60,18 @@ class Game:
             Render.render()
             self.update(gl.STEP)
             pygame.display.flip()
-
             gl.clock.tick(gl.FPS)
 
-
     # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
-    def update(self, dt):
-        start_position = gl.position
+    @staticmethod
+    def update(dt):
 
-        gl.position = Util.increase(gl.position, dt * gl.speed, gl.trackLength)
+        start_position = gl.position  # Position zum Start der Methode, nicht generelle 1. Position
         current_segment = Util.which_segment(gl.position + gl.playerZ)
-
         tilt = dt * 2 * (gl.speed / gl.maxSpeed)
+        gl.position = Util.increase(gl.position, dt * gl.speed, gl.trackLength)
+
+        AI.update_cars(dt, current_segment, gl.playerw)  # Hier werden die NPCs bewegt
 
         if gl.keyLeft:
             gl.playerX = gl.playerX - tilt
@@ -89,13 +93,16 @@ class Game:
         else:
             gl.speed = Util.accelerate(gl.speed, gl.decel, gl.DT)
 
-        if (gl.playerX < -1 or gl.playerX > 1) and (gl.speed > gl.offRoadLimit):
-            gl.speed = Util.accelerate(gl.speed, gl.offRoadDecel, gl.DT)
+        if gl.playerX < -1 or gl.playerX > 1:
+            if gl.speed > gl.offRoadLimit:
+                gl.speed = Util.accelerate(gl.speed, gl.offRoadDecel, gl.DT)
+
+            Util.obstacle_collision(current_segment)  # Kollision mit Hindernissen
+
+        Util.car_collision(current_segment)  # Kollision mit Autos
 
         gl.playerX = Util.limit(gl.playerX, -2, 2)
         gl.speed = Util.limit(gl.speed, 0, gl.maxSpeed)
 
-        # Fast alles bezueglich Zeit wurde jetzt nach Util verlagert
-        Util.check_time(start_position)
-
+        Util.check_time(start_position)  # Ueberprueft und Updatet die Zeit ueber Util
         Util.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)
