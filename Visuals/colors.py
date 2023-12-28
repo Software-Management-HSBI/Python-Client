@@ -8,6 +8,11 @@ class Colors:
     GREEN = (0, 255, 0)
     BLUE = (0, 0, 255)
     YELLOW = (255, 255, 0)
+    LIGHT_RED = (255, 100, 100)  # Gehoverte Rot-Version
+    LIGHT_GREEN = (100, 255, 100)  # Gehoverte Grün-Version
+    LIGHT_BLUE = (100, 100, 255)  # Gehoverte Blau-Version
+    LIGHT_YELLOW = (255, 255, 100)  # Gehoverte Gelb-Version
+    LIGHT_GRAY = (200, 200, 200)
 
     @staticmethod
     def get_finish():

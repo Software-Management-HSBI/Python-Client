@@ -12,7 +12,6 @@ client = Client()
 
 
 # In diesen Methoden werden unsere Aufrufe fuer die verschiedenen Modi aufgerufen, sie sind die Aktionen der Buttons
-# TODO: Das ist alles noch etwas Spaghetti-Code-Artig, irgendwie refactoren.
 def start_game():
     Game()
 
@@ -27,18 +26,16 @@ def multiplayer():
     pass
 
 
-title = "Wakaliwood Gaming"
+title = "Outrunner"
 
-start_Button = Button(50, 50, 200, 50, "Start", color=Colors.GREEN, action=start_game)
-options_Button = Button(gl.width - 250, 50, 200, 50, "Optionen", color=Colors.YELLOW, action=options)
-multiplayer_Button = Button(50, gl.height - 100, 200, 50, "Mehrspieler", color=Colors.BLUE, action=multiplayer)
-quit_Button = Button(gl.width - 250, gl.height - 100, 200, 50, "Beenden", color=Colors.WHITE, action=sys.exit)
+start_Button = Button(50, 50, 200, 50, "Start", color=Colors.GREEN, hover_color=Colors.LIGHT_GREEN, action=start_game)
+options_Button = Button(gl.width - 250, 50, 200, 50, "Optionen", color=Colors.YELLOW, hover_color=Colors.LIGHT_YELLOW, action=options)
+multiplayer_Button = Button(50, gl.height - 100, 200, 50, "Mehrspieler", color=Colors.BLUE, hover_color=Colors.LIGHT_BLUE, action=multiplayer)
+quit_Button = Button(gl.width - 250, gl.height - 100, 200, 50, "Beenden", color=Colors.WHITE, hover_color= Colors.LIGHT_GRAY,action=sys.exit)
 
 buttons = [start_Button, options_Button, multiplayer_Button, quit_Button]
 
 
-# TODO: Hier soll das Menu implementiert werden,
-#  also verschiedene Knoepfe fuer Singleplayer, Multiplayer, Einstellungen etc.
 class Menu:
     background_image = pygame.image.load("assets/backgroundMenu.png")
 
