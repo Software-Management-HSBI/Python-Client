@@ -7,7 +7,9 @@ from Multiplayer.button import Button
 
 class Lobby:
 
+    lobby_image = pygame.image.load("assets/lobby.jpg")
     def __init__(self):
+        # TODO: Hier wird dann statt dieser Liste eine Liste aller Spieler vom Server genommen
         self.player_list = ["Spieler 1", "Spieler 2", "Spieler 3", "Spieler 4"]
         self.player_buttons = []
 
@@ -23,11 +25,10 @@ class Lobby:
             button_x = (gl.width - self.button_width) // 2
             button_y = self.initial_button_y + i * (self.button_height + self.button_spacing)
 
-            button = Button(button_x, button_y, self.button_width, self.button_height, f"{player}\nBereit")
+            button = Button(button_x, button_y, self.button_width, self.button_height, f"{player}\n Bereit", color=Colors.RED)
             self.player_buttons.append(button)
 
     def lobby_loop(self):
-        # Hauptschleife
         running = True
         while running:
             for event in pygame.event.get():
@@ -38,11 +39,12 @@ class Lobby:
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     for button in self.player_buttons:
                         if button.rect.collidepoint(event.pos):
-                            # Hier kannst du die Bereitschaft des Spielers ändern
+                            # TODO: Hier kommt dann der Bereitschaftscheck hin, maybe eine Methode vom Server die das macht?
+                            button.color = Colors.GREEN
                             print(f"{button.text} wurde angeklickt")
 
             # Hintergrund zeichnen
-            gl.screen.fill(Colors.LIGHT_GRAY)
+            gl.screen.blit(self.lobby_image, (0, 0))
 
             # Zeichne die Buttons
             for button in self.player_buttons:
