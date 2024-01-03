@@ -3,6 +3,7 @@ import sys
 
 from Multiplayer.button import Button
 from Multiplayer.client import Client
+from Multiplayer.lobby import Lobby
 from Gamefiles.game import Game
 from Visuals.colors import Colors
 
@@ -23,7 +24,7 @@ def options():
 
 
 def multiplayer():
-    pass
+    Lobby()
 
 
 title = "Outrunner"
