@@ -208,7 +208,7 @@ class Util:
 
                 #  Erhoeht die Rundezahl
                 gl.laps += 1
-                if gl.laps >= 3:
+                if gl.laps >= gl.max_laps:
                     gl.maxSpeed = 0.1
                     gl.timer_active = False
 

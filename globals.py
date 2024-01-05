@@ -72,6 +72,7 @@ total_time = 0
 timer_active = True
 
 laps = 0
+max_laps = 2
 
 player = None
 player_sprites = None
