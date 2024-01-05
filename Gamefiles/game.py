@@ -45,8 +45,19 @@ class Game:
                         gl.keyRight = True
                     if event.key == pygame.K_UP:
                         gl.keyFaster = True
+                        gl.start_time = True
                     if event.key == pygame.K_DOWN:
                         gl.keySlower = True
+
+                    if event.key == pygame.K_a:
+                        gl.keyA = True
+                    if event.key == pygame.K_d:
+                        gl.keyD = True
+                    if event.key == pygame.K_w:
+                        gl.keyW = True
+                    if event.key == pygame.K_s:
+                        gl.keyS = True
+
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         gl.keyLeft = False
@@ -56,6 +67,15 @@ class Game:
                         gl.keyFaster = False
                     if event.key == pygame.K_DOWN:
                         gl.keySlower = False
+
+                    if event.key == pygame.K_a:
+                        gl.keyA = False
+                    if event.key == pygame.K_d:
+                        gl.keyD = False
+                    if event.key == pygame.K_w:
+                        gl.keyW = False
+                    if event.key == pygame.K_s:
+                        gl.keyS = False
 
             Render.render()
             self.update(gl.STEP)

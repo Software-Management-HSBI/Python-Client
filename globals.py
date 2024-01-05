@@ -44,6 +44,9 @@ decel = -maxSpeed / 5  # Verlangsamung bei keiner Tasteneingabe
 offRoadDecel = -maxSpeed / 2  # Verlangsamung auf Gras
 offRoadLimit = maxSpeed / 4  # Hoechstgeschwindigkeit auf Gras
 
+speed2 = 0
+player2X = 0
+
 # Beeinflusst das Verhalten des Autos in der Kurve; Je groesser der Wert, desto schwieriger die Lenkung
 centrifugal = 0.3
 cars = []  # Sammlung aller NPC-Autos
@@ -54,11 +57,18 @@ keyRight = False
 keyFaster = False
 keySlower = False
 
+keyW = False
+keyA = False
+keyS = False
+keyD = False
+
 current_lap_time = 0
 last_lap_time = 0
 best_lap_time = float('inf')
 font = pygame.font.SysFont(None, 36)
 lap_start_time = 0
+
+laps = 0
 
 player = None
 player_sprites = None

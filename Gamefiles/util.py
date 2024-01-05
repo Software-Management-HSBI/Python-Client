@@ -205,6 +205,9 @@ class Util:
                 gl.last_lap_time = gl.current_lap_time
                 gl.current_lap_time = 0
 
+                #  Erhoeht die Rundezahl
+                gl.laps += 1
+
                 gl.lap_start_time = time.time()
                 # Checkt nach Bestzeit
                 if gl.last_lap_time < gl.best_lap_time:
@@ -221,11 +224,15 @@ class Util:
         best_time_text = gl.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
         timer_text = gl.font.render(f"Aktuelle Runde: {formatted_time} Sekunden", True, Colors.BLACK)
         last_time_text = gl.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
+        lap_count_text = gl.font.render(f"Runden: {gl.laps}", True, Colors.LIGHT_BLUE)
         if not math.isinf(gl.best_lap_time):
             best_time_text = gl.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)
+        speed_text = gl.font.render(f"Geschwindigkeit: {int(gl.speed / gl.FPS)} km/h", True, Colors.BLACK)
         gl.screen.blit(timer_text, (10, 10))
         gl.screen.blit(last_time_text, (10, 50))
         gl.screen.blit(best_time_text, (10, 90))
+        gl.screen.blit(lap_count_text, (400, 10))
+        gl.screen.blit(speed_text, (575, 10))
 
     @staticmethod
     def overlap(x1, w1, x2, w2, percent=None):
