@@ -67,6 +67,9 @@ last_lap_time = 0
 best_lap_time = float('inf')
 font = pygame.font.SysFont(None, 36)
 lap_start_time = 0
+total_time = 0
+
+timer_active = True
 
 laps = 0
 

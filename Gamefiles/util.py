@@ -164,7 +164,7 @@ class Util:
             img = pygame.image.load(sprite.get("asset")).convert()
             hill = pygame.transform.scale(img, (dest_w, dest_h))
             hill = pygame.transform.chop(hill, (
-            0, hill.get_height() - (hill.get_height() * clip_h / dest_h), 0, sprite.get("height")))
+                0, hill.get_height() - (hill.get_height() * clip_h / dest_h), 0, sprite.get("height")))
             screen.blit(hill, [destX, destY])
 
     # Alle 3 ease-Methoden sind fuer die Kurvenmodellierung
@@ -203,10 +203,14 @@ class Util:
         if gl.position > gl.playerZ:
             if gl.current_lap_time and (start_position < gl.playerZ):
                 gl.last_lap_time = gl.current_lap_time
+                gl.total_time += gl.current_lap_time
                 gl.current_lap_time = 0
 
                 #  Erhoeht die Rundezahl
                 gl.laps += 1
+                if gl.laps >= 3:
+                    gl.maxSpeed = 0.1
+                    gl.timer_active = False
 
                 gl.lap_start_time = time.time()
                 # Checkt nach Bestzeit
@@ -220,19 +224,23 @@ class Util:
     # Zeigt aktuelle, letzte und beste Zeit an
     @staticmethod
     def update_time(current_lap_time, last_lap_time, best_lap_time):
-        formatted_time = "{:.1f}".format(current_lap_time)
-        best_time_text = gl.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
-        timer_text = gl.font.render(f"Aktuelle Runde: {formatted_time} Sekunden", True, Colors.BLACK)
-        last_time_text = gl.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
-        lap_count_text = gl.font.render(f"Runden: {gl.laps}", True, Colors.LIGHT_BLUE)
-        if not math.isinf(gl.best_lap_time):
-            best_time_text = gl.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)
-        speed_text = gl.font.render(f"Geschwindigkeit: {int(gl.speed / gl.FPS)} km/h", True, Colors.BLACK)
-        gl.screen.blit(timer_text, (10, 10))
-        gl.screen.blit(last_time_text, (10, 50))
-        gl.screen.blit(best_time_text, (10, 90))
-        gl.screen.blit(lap_count_text, (400, 10))
-        gl.screen.blit(speed_text, (575, 10))
+        if gl.timer_active:
+            formatted_time = "{:.1f}".format(current_lap_time)
+            best_time_text = gl.font.render(f"Noch keine Runde gefahren", True, Colors.RED)
+            timer_text = gl.font.render(f"Aktuelle Runde: {formatted_time} Sekunden", True, Colors.BLACK)
+            last_time_text = gl.font.render(f"Letzte Runde: {int(last_lap_time)} Sekunden", True, Colors.BLUE)
+            lap_count_text = gl.font.render(f"Runden: {gl.laps}", True, Colors.LIGHT_BLUE)
+            if not math.isinf(gl.best_lap_time):
+                best_time_text = gl.font.render(f"Beste Runde: {int(best_lap_time)} Sekunden", True, Colors.RED)
+            speed_text = gl.font.render(f"Geschwindigkeit: {int(gl.speed / gl.FPS)} km/h", True, Colors.BLACK)
+            gl.screen.blit(timer_text, (10, 10))
+            gl.screen.blit(last_time_text, (10, 50))
+            gl.screen.blit(best_time_text, (10, 90))
+            gl.screen.blit(lap_count_text, (400, 10))
+            gl.screen.blit(speed_text, (575, 10))
+        else:
+            total_time = gl.font.render(f"Gesamtzeit: {gl.total_time:.2f} Sekunden", True, Colors.BLACK)
+            gl.screen.blit(total_time, (300, 400))
 
     @staticmethod
     def overlap(x1, w1, x2, w2, percent=None):
