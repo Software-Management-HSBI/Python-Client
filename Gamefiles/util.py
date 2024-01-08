@@ -256,14 +256,16 @@ class Util:
     # Ueberprueft Kollision mit Objekten seitlich der Straße und haelt das Auto bei Kollision komplett an
     @staticmethod
     def obstacle_collision(current_segment):
-        for obstacle in current_segment.get("sprites"):
-            obstacleW = 200 * gl.playerw
-            if Util.overlap(gl.playerX, gl.playerw,
-                            obstacle.get("offset") + obstacleW / 2 * (1 if obstacle.get("offset") > 0 else -1),
-                            obstacleW):
+        for n in range(len(current_segment.get("sprites"))):
+            sprite = current_segment.get("sprites")[n]
+            sprite_w = sprite.get("source").get("width") * (gl.playerw * 1/80)
+            h = 0
+            if sprite.get("offset") > 0:
+                h = 1
+            if Util.overlap(gl.playerX, gl.playerw, sprite.get("offset") + sprite_w / 2 * h, sprite_w):
                 gl.speed = gl.maxSpeed / 5
-                gl.position = Util.increase(current_segment.get("p1").get("world").get("z"), -gl.playerZ,
-                                            gl.trackLength)
+                gl.position = Util.increase(current_segment.get("p1").get("world").get("z"),
+                                            -gl.playerZ, gl.trackLength)
 
     # Ueberprueft Kollision mit anderen Autos und verlangsamt den Spieler, falls notwendig
     @staticmethod
