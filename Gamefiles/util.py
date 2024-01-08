@@ -206,7 +206,7 @@ class Util:
                 gl.total_time += gl.current_lap_time
                 gl.current_lap_time = 0
 
-                #  Erhoeht die Rundezahl
+                #  Erhoeht die Rundenzahl
                 gl.laps += 1
                 if gl.laps >= gl.max_laps:
                     gl.maxSpeed = 0.1
@@ -268,9 +268,11 @@ class Util:
     # Ueberprueft Kollision mit anderen Autos und verlangsamt den Spieler, falls notwendig
     @staticmethod
     def car_collision(current_segment):
-        for car in current_segment.get("cars"):
+        for n in range(len(current_segment.get("cars"))):
+            car = current_segment.get("cars")[n]
+            car_w = car.get("sprite").get("width") * (gl.playerw * 1/80)
             if gl.speed > car.get("speed"):
-                if Util.overlap(gl.playerX, gl.playerw, car.get("offset"), gl.playerw, 0.8):
-                    gl.speed = gl.maxSpeed / 5
+                if Util.overlap(gl.playerX, gl.playerw, car.get("offset"), car_w, 0.8):
+                    gl.speed = car.get("speed") * (car.get("speed") / gl.speed)
                     gl.position = Util.increase(car.get("z"), -gl.playerZ, gl.trackLength)
                     break
