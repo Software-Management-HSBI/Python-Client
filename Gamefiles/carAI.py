@@ -8,7 +8,7 @@ class AI:
     # Updatet die NPC-Autos in dem Sichtfeld des Spielers (groesstenteils wie in JS)
     @staticmethod
     def update_cars(dt, player_segment, playerw):
-        for n in range(len(gl.cars)):
+        for n in range(1, len(gl.cars)):
             car = gl.cars[n]
             old_segment = Util.which_segment(car.get("z"))
             hel = AI.update_offset(car, old_segment, player_segment, playerw)
@@ -63,3 +63,35 @@ class AI:
                         else:
                             direction = -1
                     return direction * 1 / i * (car.get("speed") - other_car.get("speed")) / gl.maxSpeed
+
+    @staticmethod
+    def update_player_cars(dt):
+        car = gl.cars[0]
+        old_segment = car.get("segment")
+        tilt = dt * 2 * (gl.speed2 / gl.maxSpeed)
+        if gl.keyA:
+            gl.player2X = gl.player2X - tilt
+        elif gl.keyD:
+            gl.player2X = gl.player2X + tilt
+
+        gl.player2X -= tilt * (gl.speed2 / gl.maxSpeed) * old_segment.get("curve") * gl.centrifugal
+
+        if gl.keyW:
+            gl.speed2 = Util.accelerate(gl.speed2, gl.accel, gl.DT)
+            print("klappt")
+        elif gl.keyS:
+            gl.speed2 = Util.accelerate(gl.speed2, gl.breaking, gl.DT)
+        else:
+            gl.speed2 = Util.accelerate(gl.speed2, gl.decel, gl.DT)
+
+        if gl.player2X < -1 or gl.player2X > 1:
+            if gl.speed2 > gl.offRoadLimit:
+                gl.speed2 = Util.accelerate(gl.speed2, gl.offRoadDecel, gl.DT)
+
+        car["offset"] = car.get("offset")
+        car["z"] = gl.speed2
+        new_segment = Util.which_segment(car.get("z"))
+        if old_segment != new_segment:
+            index = old_segment.get("cars").index(car)
+            old_segment.get("cars").pop(index)
+            new_segment.get("cars").append(car)
