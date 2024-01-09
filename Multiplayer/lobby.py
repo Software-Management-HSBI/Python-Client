@@ -39,10 +39,15 @@ class Lobby:
                 # Ueberpruefe, ob ein Button angeklickt wurde
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     for button in self.player_buttons:
+                        ready = False
                         if button.rect.collidepoint(event.pos):
-                            # TODO: Hier kommt dann der Bereitschaftscheck hin, maybe eine Methode vom Server die das macht?
-                            button.color = Colors.GREEN
-                            print(f"{button.text} wurde angeklickt")
+                            if not ready:
+                                # TODO: Hier kommt dann der Bereitschaftscheck hin, maybe eine Methode vom Server die das macht?
+                                button.color = Colors.GREEN
+                                ready = True
+                                print(f"{button.text} wurde angeklickt")
+                            else:
+                                button.color = Colors.RED
 
             # Hintergrund zeichnen
             gl.screen.blit(self.lobby_image, (0, 0))
