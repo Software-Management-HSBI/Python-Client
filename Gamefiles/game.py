@@ -126,3 +126,5 @@ class Game:
 
         Util.check_time(start_position)  # Ueberprueft und Updatet die Zeit ueber Util
         Util.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)
+        if gl.singleplayer is False:
+            gl.SocketIOClient.ingame_pos(gl.playerZ + gl.position, gl.playerX)

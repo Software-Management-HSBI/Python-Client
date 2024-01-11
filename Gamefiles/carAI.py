@@ -65,33 +65,18 @@ class AI:
                     return direction * 1 / i * (car.get("speed") - other_car.get("speed")) / gl.maxSpeed
 
     @staticmethod
-    def update_player_cars(dt):
-        car = gl.cars[0]
-        old_segment = car.get("segment")
-        tilt = dt * 2 * (gl.speed2 / gl.maxSpeed)
-        if gl.keyA:
-            gl.player2X = gl.player2X - tilt
-        elif gl.keyD:
-            gl.player2X = gl.player2X + tilt
+    def update_player_cars():
+        for car in gl.cars:
+            old_segment = car.get("segment")
+            for new_car in gl.client.new_cars:
+                if car.get("id") == new_car.get("id"):
+                    car["offset"] = new_car.get("offset")
+                    car["z"] = new_car.get("pos")
+                    car["segment"] = Util.which_segment(car.get("z"))
+                    break
 
-        gl.player2X -= tilt * (gl.speed2 / gl.maxSpeed) * old_segment.get("curve") * gl.centrifugal
-
-        if gl.keyW:
-            gl.speed2 = Util.accelerate(gl.speed2, gl.accel, gl.DT)
-            print("klappt")
-        elif gl.keyS:
-            gl.speed2 = Util.accelerate(gl.speed2, gl.breaking, gl.DT)
-        else:
-            gl.speed2 = Util.accelerate(gl.speed2, gl.decel, gl.DT)
-
-        if gl.player2X < -1 or gl.player2X > 1:
-            if gl.speed2 > gl.offRoadLimit:
-                gl.speed2 = Util.accelerate(gl.speed2, gl.offRoadDecel, gl.DT)
-
-        car["offset"] = car.get("offset")
-        car["z"] = gl.speed2
-        new_segment = Util.which_segment(car.get("z"))
-        if old_segment != new_segment:
-            index = old_segment.get("cars").index(car)
-            old_segment.get("cars").pop(index)
-            new_segment.get("cars").append(car)
+            new_segment = car.get("segment")
+            if old_segment != new_segment:
+                index = old_segment.get("cars").index(car)
+                old_segment.get("cars").pop(index)
+                new_segment.get("cars").append(car)

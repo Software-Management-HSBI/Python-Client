@@ -1,5 +1,6 @@
 import pygame
 import math
+from Multiplayer.client import SocketIOClient
 
 pygame.init()
 
@@ -97,3 +98,7 @@ road = [
     [25],
     [100, -3, -40]
 ]
+
+singleplayer = True
+client = SocketIOClient()
+player_cars = []

@@ -2,14 +2,11 @@ import pygame
 import sys
 
 from Multiplayer.button import Button
-from Multiplayer.client import Client
 from Multiplayer.lobby import Lobby
 from Gamefiles.game import Game
 from Visuals.colors import Colors
 
 import globals as gl
-
-client = Client()
 
 
 # In diesen Methoden werden unsere Aufrufe fuer die verschiedenen Modi aufgerufen, sie sind die Aktionen der Buttons
@@ -30,9 +27,12 @@ def multiplayer():
 title = "Outrunner"
 
 start_Button = Button(50, 50, 200, 50, "Start", color=Colors.GREEN, hover_color=Colors.LIGHT_GREEN, action=start_game)
-options_Button = Button(gl.width - 250, 50, 200, 50, "Optionen", color=Colors.YELLOW, hover_color=Colors.LIGHT_YELLOW, action=options)
-multiplayer_Button = Button(50, gl.height - 100, 200, 50, "Mehrspieler", color=Colors.BLUE, hover_color=Colors.LIGHT_BLUE, action=multiplayer)
-quit_Button = Button(gl.width - 250, gl.height - 100, 200, 50, "Beenden", color=Colors.WHITE, hover_color= Colors.LIGHT_GRAY,action=sys.exit)
+options_Button = Button(gl.width - 250, 50, 200, 50, "Optionen", color=Colors.YELLOW, hover_color=Colors.LIGHT_YELLOW,
+                        action=options)
+multiplayer_Button = Button(50, gl.height - 100, 200, 50, "Mehrspieler", color=Colors.BLUE,
+                            hover_color=Colors.LIGHT_BLUE, action=multiplayer)
+quit_Button = Button(gl.width - 250, gl.height - 100, 200, 50, "Beenden", color=Colors.WHITE,
+                     hover_color=Colors.LIGHT_GRAY, action=sys.exit)
 
 buttons = [start_Button, options_Button, multiplayer_Button, quit_Button]
 
