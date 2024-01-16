@@ -54,3 +54,13 @@ class Sprites:
     @staticmethod
     def add_sprite(segments, n, sprite, offset):
         segments[n]["sprites"].append({"source": sprite, "offset": offset})
+
+    @staticmethod
+    def create_server_cars():
+        for player in gl.player_cars:
+            segment = Util.which_segment(player.get("pos"))
+            car = {"offset": player.get("offset"), "z": player.get("pos"), "sprite": Sprite.get_car(),
+                   "speed": 0, "percent": 0, "player": True}
+            if car not in segment.get("cars"):
+                segment["cars"].append(car)
+                gl.cars.append(car)

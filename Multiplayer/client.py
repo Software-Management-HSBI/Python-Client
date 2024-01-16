@@ -7,7 +7,7 @@ from Gamefiles.carAI import AI
 # Client fuer die Socket.io-Verbindung. Muss erweitert werden
 class SocketIOClient:
     def __init__(self):
-        self.server_address = ""
+        self.server_address = "ec2-18-159-61-52.eu-central-1.compute.amazonaws.com:3000"
         self.sio = socketio.Client(logger=True)
 
         self.sio.on('connection_successful', self.on_connection_success)
@@ -29,12 +29,12 @@ class SocketIOClient:
 
     def ready(self):
         if self.sio.connected:
-            self.sio.emit("Bereit")
+            self.sio.emit("ready")
             self.ready = True
 
     def not_ready(self):
         if self.sio.connected:
-            self.sio.emit("Nicht Bereit")
+            self.sio.emit("not_ready")
             self.ready = False
 
     def on_wait_for_start(self, data):
@@ -54,3 +54,19 @@ class SocketIOClient:
             data = {"offset": offset, "position": position}
             self.olddata = position
             self.sio.emit("ingame_pos", data)
+
+    def connect(self):
+        try:
+            self.sio.connect(self.server_address, transports=['websocket'])
+        except ConnectionRefusedError:
+            print("Connection-Error")
+
+    def client_ingame(self):
+        if self.sio.connected:
+            self.sio.emit("client_ingame")
+
+    def disconnect(self):
+        try:
+            self.sio.disconnect()
+        except ConnectionRefusedError:
+            print("Not connected in the first place")

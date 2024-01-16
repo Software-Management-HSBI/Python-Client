@@ -24,6 +24,8 @@ class Game:
         gl.background_sprites = pygame.sprite.Group()
         gl.lap_start_time = time.time()
         Road.reset_road()
+        if not gl.singleplayer:
+            gl.client.start_game()
         self.game_loop()
 
     # Loop des Spiels: Erstellt Spieler und Hintergrund, nimmt Inputs entgegen und ruft permanent die render- und
@@ -127,4 +129,4 @@ class Game:
         Util.check_time(start_position)  # Ueberprueft und Updatet die Zeit ueber Util
         Util.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)
         if gl.singleplayer is False:
-            gl.SocketIOClient.ingame_pos(gl.playerZ + gl.position, gl.playerX)
+            gl.client.ingame_pos(gl.playerZ + gl.position, gl.playerX)

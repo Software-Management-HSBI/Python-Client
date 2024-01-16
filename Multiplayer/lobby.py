@@ -26,28 +26,35 @@ class Lobby:
             button_y = self.initial_button_y + i * (self.button_height + self.button_spacing)
 
             button = Button(button_x, button_y, self.button_width, self.button_height, f"{player}\n Bereit",
-                            color=Colors.RED)
+                            color=Colors.RED, hover_color=Colors.LIGHT_RED)
             self.player_buttons.append(button)
 
     def lobby_loop(self):
         running = True
+        ready = False
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    if gl.client.sio.connected:
+                        gl.client.disconnect()
                     running = False
 
                 # Ueberpruefe, ob ein Button angeklickt wurde
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     for button in self.player_buttons:
-                        ready = False
                         if button.rect.collidepoint(event.pos):
                             if not ready:
-                                # TODO: Hier kommt dann der Bereitschaftscheck hin, maybe eine Methode vom Server die das macht?
+                                # TODO: Hier kommt dann der Bereitschaftscheck hin,
+                                #  maybe eine Methode vom Server die das macht?
                                 button.color = Colors.GREEN
-                                ready = True
-                                print(f"{button.text} wurde angeklickt")
+                                button.hover_color = Colors.LIGHT_GREEN
+                                # gl.client.ready()
+                                ready = not ready
                             else:
                                 button.color = Colors.RED
+                                button.hover_color = Colors.LIGHT_RED
+                                ready = not ready
+                                # gl.client.not_ready()
 
             # Hintergrund zeichnen
             gl.screen.blit(self.lobby_image, (0, 0))
