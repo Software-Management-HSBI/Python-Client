@@ -9,18 +9,16 @@ class Lobby:
     lobby_image = pygame.image.load("assets/lobby.jpg")
 
     def __init__(self):
+        gl.client.connect()
         # TODO: Hier wird dann statt dieser Liste eine Liste aller Spieler vom Server genommen
         self.player_list = ["Spieler 1", "Spieler 2", "Spieler 3", "Spieler 4"]
         self.player_buttons = []
-
         # Erstelle Bereitschafts-Buttons für jeden Spieler
         self.button_width, self.button_height = 200, 50
         self.button_spacing = 20
         self.initial_button_y = 50
         self.create_buttons()
         self.lobby_loop()
-        if not gl.client.sio.connected:
-            gl.client.connect()
 
     def create_buttons(self):
         for i, player in enumerate(self.player_list):
@@ -40,7 +38,6 @@ class Lobby:
                     if gl.client.sio.connected:
                         gl.client.disconnect()
                     running = False
-
                 # Ueberpruefe, ob ein Button angeklickt wurde
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     for button in self.player_buttons:

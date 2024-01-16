@@ -30,7 +30,6 @@ class SocketIOClient:
     def ready(self):
         if self.sio.connected:
             self.sio.emit("ready")
-            print("klappt")
 
     def not_ready(self):
         if self.sio.connected:
@@ -52,7 +51,7 @@ class SocketIOClient:
         if self.olddata != position:
             data = {"offset": offset, "position": position}
             self.olddata = position
-            self.sio.emit("ingame_pos", data)
+            self.sio.emit("update", data)
 
     def connect(self):
         try:
@@ -71,3 +70,6 @@ class SocketIOClient:
             self.sio.disconnect()
         except ConnectionRefusedError:
             print("Not connected in the first place")
+
+    def receive(self, message):
+        print("Nachricht erhalten:", message)

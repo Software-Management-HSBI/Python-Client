@@ -99,6 +99,6 @@ road = [
     [100, -3, -40]
 ]
 
-singleplayer = True
+singleplayer = False
 client = SocketIOClient()
 player_cars = []
