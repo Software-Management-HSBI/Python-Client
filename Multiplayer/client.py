@@ -40,6 +40,7 @@ class SocketIOClient:
             for n in data:
                 gl.player_cars.append(n)
 
+    # Client erhaelt Positionen anderer Spieler
     def on_update_position(self, data):
         print("klappt")
         self.new_cars.clear()
@@ -48,12 +49,14 @@ class SocketIOClient:
 
         AI.update_player_cars()
 
+    # Uebergibt dem Server die aktuelle Position des Clients
     def ingame_pos(self, offset, position):
         if self.olddata != position:
             data = {"offset": offset, "position": position}
             self.olddata = position
             self.sio.emit("update", data)
 
+    # Verbindet sich ueber die angegebene Adresse mit dem Server
     def connect(self):
         try:
             if not self.sio.connected:
