@@ -21,6 +21,8 @@ def options():
 
 
 def multiplayer():
+    if not gl.client.sio.connected:
+        gl.client.connect()
     Lobby()
 
 
