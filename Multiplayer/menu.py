@@ -21,8 +21,6 @@ def options():
 
 
 def multiplayer():
-    # if not gl.client.sio.connected:
-        # gl.client.connect()
     Lobby()
 
 
@@ -54,6 +52,8 @@ class Menu:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    if gl.client.sio.connected:
+                        gl.client.disconnect()
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:

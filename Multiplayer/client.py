@@ -7,7 +7,7 @@ from Gamefiles.carAI import AI
 # Client fuer die Socket.io-Verbindung. Muss erweitert werden
 class SocketIOClient:
     def __init__(self):
-        self.server_address = "ec2-18-159-61-52.eu-central-1.compute.amazonaws.com:3000"
+        self.server_address = "http://ec2-18-159-61-52.eu-central-1.compute.amazonaws.com:3000"
         self.sio = socketio.Client(logger=True)
 
         self.sio.on('connection_successful', self.on_connection_success)
@@ -16,7 +16,6 @@ class SocketIOClient:
         self.sio.on('update_position', self.on_update_position)
         self.sio.on('client_ingame', self.on_client_ingame)
 
-        self.ready = False
         self.new_cars = []
         self.olddata = 0
 
@@ -31,12 +30,11 @@ class SocketIOClient:
     def ready(self):
         if self.sio.connected:
             self.sio.emit("ready")
-            self.ready = True
+            print("klappt")
 
     def not_ready(self):
         if self.sio.connected:
             self.sio.emit("not_ready")
-            self.ready = False
 
     def on_wait_for_start(self, data):
         if self.sio.connected:
@@ -58,7 +56,8 @@ class SocketIOClient:
 
     def connect(self):
         try:
-            self.sio.connect(self.server_address, transports=['websocket'])
+            if not self.sio.connected:
+                self.sio.connect(self.server_address)
         except ConnectionRefusedError:
             print("Connection-Error")
 

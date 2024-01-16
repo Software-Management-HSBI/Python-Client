@@ -19,6 +19,8 @@ class Lobby:
         self.initial_button_y = 50
         self.create_buttons()
         self.lobby_loop()
+        if not gl.client.sio.connected:
+            gl.client.connect()
 
     def create_buttons(self):
         for i, player in enumerate(self.player_list):
@@ -48,13 +50,13 @@ class Lobby:
                                 #  maybe eine Methode vom Server die das macht?
                                 button.color = Colors.GREEN
                                 button.hover_color = Colors.LIGHT_GREEN
-                                # gl.client.ready()
+                                gl.client.ready()
                                 ready = not ready
                             else:
                                 button.color = Colors.RED
                                 button.hover_color = Colors.LIGHT_RED
                                 ready = not ready
-                                # gl.client.not_ready()
+                                gl.client.not_ready()
 
             # Hintergrund zeichnen
             gl.screen.blit(self.lobby_image, (0, 0))
