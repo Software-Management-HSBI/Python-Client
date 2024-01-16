@@ -14,6 +14,7 @@ class SocketIOClient:
         self.sio.on('load_level', self.on_load_level)
         self.sio.on('wait_for_start', self.on_wait_for_start)
         self.sio.on('update_position', self.on_update_position)
+        self.sio.on('client_ingame', self.on_client_ingame)
 
         self.ready = False
         self.new_cars = []
@@ -61,7 +62,8 @@ class SocketIOClient:
         except ConnectionRefusedError:
             print("Connection-Error")
 
-    def client_ingame(self):
+    # Diese Methode wird genutzt, um den Spieler von der Lobby ins Spiel zu werfen, d. h. das muss der Server ausführen
+    def on_client_ingame(self):
         if self.sio.connected:
             self.sio.emit("client_ingame")
 
