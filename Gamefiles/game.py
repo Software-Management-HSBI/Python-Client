@@ -12,14 +12,14 @@ import globals as gl
 
 
 # Der Teil des Singleplayers, der alle anderen aktiviert:
-# Hier werden Tasteneingaben und Kollisionen des Autos #
+# Hier werden Tasteneingaben und Kollisionen des Autos
 # mit anderen Objekten ueberprueft sowie die gefahrene Zeit geupdated
 class Game:
 
     # Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel
     def __init__(self):
         gl.screen = pygame.display.set_mode((gl.width, gl.height))
-        pygame.display.set_caption("Singleplayer")
+        pygame.display.set_caption("Racing")
         gl.player_sprites = pygame.sprite.Group()
         gl.background_sprites = pygame.sprite.Group()
         gl.lap_start_time = time.time()
@@ -27,8 +27,6 @@ class Game:
         #if not gl.singleplayer:
             #gl.client.start_game()
         self.game_loop()
-        if not gl.client.sio.connected:
-            gl.client.connect()
 
     # Loop des Spiels: Erstellt Spieler und Hintergrund, nimmt Inputs entgegen und ruft permanent die render- und
     # update-Methode auf
@@ -40,6 +38,8 @@ class Game:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    if gl.client.sio.connected:
+                        gl.client.disconnect()
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
@@ -128,8 +128,9 @@ class Game:
         gl.playerX = Util.limit(gl.playerX, -2, 2)
         gl.speed = Util.limit(gl.speed, 0, gl.maxSpeed)
 
-        Util.check_time(start_position)  # Ueberprueft und Updatet die Zeit ueber Util
-        Util.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)
         # Sendet Spieler-Daten an den Server, falls Multiplayer aktiv
         if gl.singleplayer is False:
             gl.client.ingame_pos(gl.playerZ + gl.position, gl.playerX)
+
+        Util.check_time(start_position)  # Ueberprueft und Updatet die Zeit ueber Util
+        Util.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)

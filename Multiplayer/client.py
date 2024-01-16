@@ -13,7 +13,7 @@ class SocketIOClient:
         self.sio.on('connection_successful', self.on_connection_success)
         self.sio.on('load_level', self.on_load_level)
         self.sio.on('wait_for_start', self.on_wait_for_start)
-        self.sio.on('update_position', self.on_update_position)
+        self.sio.on('update', self.on_update_position)
         self.sio.on('client_ingame', self.on_client_ingame)
 
         self.new_cars = []
@@ -41,6 +41,7 @@ class SocketIOClient:
                 gl.player_cars.append(n)
 
     def on_update_position(self, data):
+        print("klappt")
         self.new_cars.clear()
         for n in data:
             self.new_cars.append(n)
@@ -70,6 +71,3 @@ class SocketIOClient:
             self.sio.disconnect()
         except ConnectionRefusedError:
             print("Not connected in the first place")
-
-    def receive(self, message):
-        print("Nachricht erhalten:", message)

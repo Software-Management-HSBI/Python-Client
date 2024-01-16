@@ -11,6 +11,8 @@ import globals as gl
 
 # In diesen Methoden werden unsere Aufrufe fuer die verschiedenen Modi aufgerufen, sie sind die Aktionen der Buttons
 def start_game():
+    if not gl.client.sio.connected:
+        gl.client.connect()
     Game()
 
 
