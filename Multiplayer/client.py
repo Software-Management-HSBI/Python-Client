@@ -2,6 +2,7 @@ import socketio
 
 import globals as gl
 from Gamefiles.carAI import AI
+from Visuals.spriteCreation import Sprites
 
 
 # Client fuer die Socket.io-Verbindung. Muss erweitert werden
@@ -10,7 +11,7 @@ class SocketIOClient:
         self.server_address = "http://ec2-18-159-61-52.eu-central-1.compute.amazonaws.com:3000"
         self.sio = socketio.Client(logger=True)
 
-        self.sio.on('connection_successful', self.on_connection_success)
+        self.sio.on('connection_success', self.on_connection_success)
         self.sio.on('load_level', self.on_load_level)
         self.sio.on('wait_for_start', self.on_wait_for_start)
         self.sio.on('update', self.on_update_position)
@@ -39,6 +40,7 @@ class SocketIOClient:
         if self.sio.connected:
             for n in data:
                 gl.player_cars.append(n)
+            Sprites.create_server_cars()
 
     # Client erhaelt Positionen anderer Spieler
     def on_update_position(self, data):
@@ -50,7 +52,7 @@ class SocketIOClient:
         AI.update_player_cars()
 
     # Uebergibt dem Server die aktuelle Position des Clients
-    def ingame_pos(self, offset, position):
+    def ingame_pos(self, position, offset):
         if self.olddata != position:
             data = {"offset": offset, "position": position}
             self.olddata = position
