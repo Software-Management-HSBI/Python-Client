@@ -99,14 +99,8 @@ class Game:
 
         if gl.keyLeft:
             gl.playerX = gl.playerX - tilt
-            if gl.speed > 0:
-                gl.player.drive_left()
         elif gl.keyRight:
             gl.playerX = gl.playerX + tilt
-            if gl.speed > 0:
-                gl.player.drive_right()
-        else:
-            gl.player.drive_straight()
 
         gl.playerX -= tilt * (gl.speed / gl.maxSpeed) * current_segment.get("curve") * gl.centrifugal
 
