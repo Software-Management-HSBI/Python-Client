@@ -2,7 +2,6 @@ import random
 
 
 class Sprite:
-
     @staticmethod
     def get_car():
         i = random.randint(0, 3)

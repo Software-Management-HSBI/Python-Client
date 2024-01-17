@@ -51,7 +51,7 @@ player2X = 0
 # Beeinflusst das Verhalten des Autos in der Kurve; Je groesser der Wert, desto schwieriger die Lenkung
 centrifugal = 0.37
 cars = []  # Sammlung aller NPC-Autos
-car_amount = 25  # Menge der NPCs
+car_amount = 1  # Menge der NPCs
 
 keyLeft = False
 keyRight = False
@@ -73,7 +73,7 @@ total_time = 0
 timer_active = True
 
 laps = 0
-max_laps = 2
+max_laps = 1
 
 player = None
 player_sprites = None

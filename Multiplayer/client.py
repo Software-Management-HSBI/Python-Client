@@ -5,8 +5,8 @@ from Gamefiles.carAI import AI
 from Visuals.spriteCreation import Sprites
 
 
-# Client fuer die Socket.io-Verbindung. Muss erweitert werden
 class SocketIOClient:
+    """Client fuer die Socket.io-Verbindung."""
     def __init__(self):
         self.server_address = "http://ec2-18-159-61-52.eu-central-1.compute.amazonaws.com:3000"
         self.sio = socketio.Client(logger=True)
@@ -40,34 +40,32 @@ class SocketIOClient:
         if self.sio.connected:
             for n in data:
                 gl.player_cars.append(n)
-            Sprites.create_server_cars()
 
-    # Client erhaelt Positionen anderer Spieler
     def on_update_position(self, data):
-        print("klappt")
-        self.new_cars.clear()
-        for n in data:
-            self.new_cars.append(n)
+        """Client erhaelt Positionen anderer Spieler"""
+        pos = data.get("pos")
+        offset = data.get("offset")
 
-        AI.update_player_cars()
+        AI.update_player_cars(pos, offset)
 
-    # Uebergibt dem Server die aktuelle Position des Clients
     def ingame_pos(self, position, offset):
+        """Uebergibt dem Server die aktuelle Position des Clients"""
         if self.olddata != position:
             data = {"offset": offset, "position": position}
             self.olddata = position
             self.sio.emit("update", data)
 
-    # Verbindet sich ueber die angegebene Adresse mit dem Server
     def connect(self):
+        """Verbindet sich ueber die angegebene Adresse mit dem Server"""
         try:
             if not self.sio.connected:
                 self.sio.connect(self.server_address)
         except ConnectionRefusedError:
             print("Connection-Error")
 
-    # Diese Methode wird genutzt, um den Spieler von der Lobby ins Spiel zu werfen, d. h. das muss der Server ausführen
     def on_client_ingame(self):
+        """Diese Methode wird genutzt, um den Spieler von der Lobby ins Spiel zu werfen,
+         d. h. das muss der Server ausführen"""
         if self.sio.connected:
             self.sio.emit("client_ingame")
 

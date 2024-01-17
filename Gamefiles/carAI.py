@@ -65,15 +65,12 @@ class AI:
                     return direction * 1 / i * (car.get("speed") - other_car.get("speed")) / gl.maxSpeed
 
     @staticmethod
-    def update_player_cars():
+    def update_player_cars(position, offset):
         for car in gl.cars:
             old_segment = car.get("segment")
-            for new_car in gl.client.new_cars:
-                if car.get("id") == new_car.get("id"):
-                    car["offset"] = new_car.get("offset")
-                    car["z"] = new_car.get("pos")
-                    car["segment"] = Util.which_segment(car.get("z"))
-                    break
+            car["offset"] = offset
+            car["z"] = position
+            car["segment"] = Util.which_segment(car.get("z"))
 
             new_segment = car.get("segment")
             if old_segment != new_segment:

@@ -1,7 +1,9 @@
 import pygame
 
-# Hilfsklasse zum Erstellen des Spiel-Hintergrunds
+
 class Background(pygame.sprite.Sprite):
+    """Hilfsklasse zum Erstellen des Spiel-Hintergrunds"""
+
     def __init__(self, x, img):
         super().__init__()
         self.image = img.convert_alpha()

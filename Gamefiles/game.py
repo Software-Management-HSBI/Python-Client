@@ -16,8 +16,8 @@ import globals as gl
 # mit anderen Objekten ueberprueft sowie die gefahrene Zeit geupdated
 class Game:
 
-    # Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel
     def __init__(self):
+        """Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel"""
         gl.screen = pygame.display.set_mode((gl.width, gl.height))
         pygame.display.set_caption("Racing")
         gl.player_sprites = pygame.sprite.Group()
@@ -28,12 +28,13 @@ class Game:
             #gl.client.start_game()
         self.game_loop()
 
-    # Loop des Spiels: Erstellt Spieler und Hintergrund, nimmt Inputs entgegen und ruft permanent die render- und
-    # update-Methode auf
     def game_loop(self):
+        """Loop des Spiels: Erstellt Spieler und Hintergrund, nimmt Inputs entgegen und ruft permanent die render- und
+        update-Methode auf"""
         Sprites.create_player()
         Sprites.create_background()
         gl.background_sprites.draw(gl.screen)
+        Sprites.create_server_cars()
 
         while True:
             for event in pygame.event.get():
@@ -86,16 +87,16 @@ class Game:
             pygame.display.flip()
             gl.clock.tick(gl.FPS)
 
-    # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
     @staticmethod
     def update(dt):
-
+        """Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert; Zeit- und NPC-Aktualisierung
+        geschieht hier ebenfalls"""
         start_position = gl.position  # Position zum Start der Methode, nicht generelle 1. Position
         current_segment = Util.which_segment(gl.position + gl.playerZ)
         tilt = dt * 2 * (gl.speed / gl.maxSpeed)
         gl.position = Util.increase(gl.position, dt * gl.speed, gl.trackLength)
 
-        AI.update_cars(dt, current_segment, gl.playerw)  # Hier werden die NPCs bewegt
+        #AI.update_cars(dt, current_segment, gl.playerw)  # Hier werden die NPCs bewegt
 
         if gl.keyLeft:
             gl.playerX = gl.playerX - tilt

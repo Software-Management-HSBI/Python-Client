@@ -16,8 +16,6 @@ def start_game():
     Game()
 
 
-# TODO: Bis jetzt ist nur der Singleplayer-Button nutzbar,
-#  weil wir noch keine andere Modi haben, d. h. hier dann aktualisieren
 def options():
     pass
 

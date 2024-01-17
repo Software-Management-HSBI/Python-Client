@@ -1,7 +1,6 @@
-# Hilfsklasse fuer die Strassenfarben
-class Colors:
 
-    # In der Colors-Klasse werden jetzt auch RGB-Arrays fuer andere Dateien gespeichert
+class Colors:
+    """Hilfsklasse fuer die Strassenfarben"""
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     RED = (255, 0, 0)

@@ -78,6 +78,7 @@ class Render:
 
     @staticmethod
     def render_cars(segment):
+        """Stellt die NPC-Autos dar"""
         for i in range(len(segment.get("cars"))):
             car = segment.get("cars")[i]
             sprite = car.get("sprite")
@@ -98,6 +99,7 @@ class Render:
 
     @staticmethod
     def render_sprites(segment):
+        """Stellt die Objekte am Rand der Strasse dar"""
         for i in range(len(segment.get("sprites"))):
             sprite = segment.get("sprites")[i]
             sprite_scale = segment.get("p1").get("screen").get("scale")
@@ -115,8 +117,9 @@ class Render:
 
     @staticmethod
     def render_player(segment):
+        """Stellt den Spieler dar und veraendert sein Modell, falls er lenkt oder einen Huegel hochfaehrt"""
         uphill = segment.get("p2").get("world").get("y") - segment.get("p1").get("world").get("y")
-        bounce =(segment.get("index") % 3) * 1.5
+        bounce = (segment.get("index") % 3) * 1.5
         if gl.keyLeft:
             if uphill > 0:
                 gl.player.drive_left(True)
