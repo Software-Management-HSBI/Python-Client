@@ -33,8 +33,9 @@ class Game:
         update-Methode auf"""
         Sprites.create_player()
         Sprites.create_background()
+        Sprites.create_bots()
         gl.background_sprites.draw(gl.screen)
-        Sprites.create_server_cars()
+        #Sprites.create_server_cars()
 
         while True:
             for event in pygame.event.get():
@@ -54,15 +55,6 @@ class Game:
                     if event.key == pygame.K_DOWN:
                         gl.keySlower = True
 
-                    if event.key == pygame.K_a:
-                        gl.keyA = True
-                    if event.key == pygame.K_d:
-                        gl.keyD = True
-                    if event.key == pygame.K_w:
-                        gl.keyW = True
-                    if event.key == pygame.K_s:
-                        gl.keyS = True
-
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         gl.keyLeft = False
@@ -72,15 +64,6 @@ class Game:
                         gl.keyFaster = False
                     if event.key == pygame.K_DOWN:
                         gl.keySlower = False
-
-                    if event.key == pygame.K_a:
-                        gl.keyA = False
-                    if event.key == pygame.K_d:
-                        gl.keyD = False
-                    if event.key == pygame.K_w:
-                        gl.keyW = False
-                    if event.key == pygame.K_s:
-                        gl.keyS = False
 
             Render.render()
             self.update(gl.STEP)
@@ -96,7 +79,7 @@ class Game:
         tilt = dt * 2 * (gl.speed / gl.maxSpeed)
         gl.position = Util.increase(gl.position, dt * gl.speed, gl.trackLength)
 
-        #AI.update_cars(dt, current_segment, gl.playerw)  # Hier werden die NPCs bewegt
+        AI.update_cars(dt, current_segment, gl.playerw)  # Hier werden die NPCs bewegt
 
         if gl.keyLeft:
             gl.playerX = gl.playerX - tilt

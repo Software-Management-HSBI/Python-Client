@@ -8,7 +8,7 @@ class AI:
     # Updatet die NPC-Autos in dem Sichtfeld des Spielers (groesstenteils wie in JS)
     @staticmethod
     def update_cars(dt, player_segment, playerw):
-        for n in range(1, len(gl.cars)):
+        for n in range(len(gl.cars)):
             car = gl.cars[n]
             old_segment = Util.which_segment(car.get("z"))
             hel = AI.update_offset(car, old_segment, player_segment, playerw)

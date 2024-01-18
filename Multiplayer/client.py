@@ -48,11 +48,10 @@ class SocketIOClient:
 
         AI.update_player_cars(pos, offset)
 
-    def ingame_pos(self, position, offset):
+    def ingame_pos(self, player, position, x):
         """Uebergibt dem Server die aktuelle Position des Clients"""
         if self.olddata != position:
-            data = {"offset": offset, "position": position}
-            self.olddata = position
+            data = {"player": player, "position": position, "x": x}
             self.sio.emit("update", data)
 
     def connect(self):
