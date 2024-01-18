@@ -1,3 +1,6 @@
-from Standard_Config import Game
+from Multiplayer.menu import Menu
+import pygame
 
-Game()
+pygame.init()
+
+Menu()
