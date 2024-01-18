@@ -2,10 +2,9 @@ import random
 
 
 class Sprite:
-
     @staticmethod
     def get_car():
-        i = random.randint(0, 3)
+        i = random.randint(0, 5)
         if i == 0:
             car = {"asset": "assets/npc/car01.png", "width": 80, "height": 56}
         elif i == 1:
@@ -14,6 +13,10 @@ class Sprite:
             car = {"asset": "assets/npc/car03.png", "width": 88, "height": 55}
         elif i == 3:
             car = {"asset": "assets/npc/car04.png", "width": 80, "height": 57}
+        elif i == 4:
+            car = {"asset": "assets/npc/semi.png", "width": 122, "height": 144}
+        elif i == 5:
+            car = {"asset": "assets/npc/truck.png", "width": 100, "height": 78}
         else:
             car = {"asset": "assets/npc/car01.png", "width": 80, "height": 56}
 
@@ -21,13 +24,25 @@ class Sprite:
 
     @staticmethod
     def create_tree():
-        i = random.randint(0, 2)
+        i = random.randint(0, 8)
         if i == 0:
             tree = {"asset": "assets/tree/tree01.png", "width": 360, "height": 360}
         elif i == 1:
             tree = {"asset": "assets/tree/tree02.png", "width": 215, "height": 540}
         elif i == 2:
             tree = {"asset": "assets/tree/tree03.png", "width": 282, "height": 295}
+        elif i == 3:
+            tree = {"asset": "assets/tree/palm_tree.png", "width": 215, "height": 540}
+        elif i == 4:
+            tree = {"asset": "assets/tree/dead_tree1.png", "width": 135, "height": 332}
+        elif i == 5:
+            tree = {"asset": "assets/tree/boulder1.png", "width": 168, "height": 248}
+        elif i == 6:
+            tree = {"asset": "assets/tree/boulder2.png", "width": 298, "height": 140}
+        elif i == 7:
+            tree = {"asset": "assets/tree/dead_tree2.png", "width": 150, "height": 260}
+        elif i == 8:
+            tree = {"asset": "assets/tree/stump.png", "width": 195, "height": 140}
         else:
             tree = {"asset": "assets/tree/tree01.png", "width": 360, "height": 360}
 

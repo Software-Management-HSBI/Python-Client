@@ -1,5 +1,6 @@
 import pygame
 import math
+from Multiplayer.client import SocketIOClient
 
 pygame.init()
 
@@ -44,23 +45,15 @@ decel = -maxSpeed / 5  # Verlangsamung bei keiner Tasteneingabe
 offRoadDecel = -maxSpeed / 2  # Verlangsamung auf Gras
 offRoadLimit = maxSpeed / 4  # Hoechstgeschwindigkeit auf Gras
 
-speed2 = 0
-player2X = 0
-
 # Beeinflusst das Verhalten des Autos in der Kurve; Je groesser der Wert, desto schwieriger die Lenkung
-centrifugal = 0.3
+centrifugal = 0.37
 cars = []  # Sammlung aller NPC-Autos
-car_amount = 25  # Menge der NPCs
+car_amount = 20  # Menge der NPCs
 
 keyLeft = False
 keyRight = False
 keyFaster = False
 keySlower = False
-
-keyW = False
-keyA = False
-keyS = False
-keyD = False
 
 current_lap_time = 0
 last_lap_time = 0
@@ -72,7 +65,7 @@ total_time = 0
 timer_active = True
 
 laps = 0
-max_laps = 2
+max_laps = 1
 
 player = None
 player_sprites = None
@@ -97,3 +90,7 @@ road = [
     [25],
     [100, -3, -40]
 ]
+
+singleplayer = True
+client = SocketIOClient()
+player_cars = []

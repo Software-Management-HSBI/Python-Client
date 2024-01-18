@@ -12,30 +12,36 @@ import globals as gl
 
 
 # Der Teil des Singleplayers, der alle anderen aktiviert:
-# Hier werden Tasteneingaben und Kollisionen des Autos #
+# Hier werden Tasteneingaben und Kollisionen des Autos
 # mit anderen Objekten ueberprueft sowie die gefahrene Zeit geupdated
 class Game:
 
-    # Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel
     def __init__(self):
+        """Erstellt den Bildschirm, startet das Generieren der Strasse, und beginnt das Spiel"""
         gl.screen = pygame.display.set_mode((gl.width, gl.height))
-        pygame.display.set_caption("Singleplayer")
+        pygame.display.set_caption("Racing")
         gl.player_sprites = pygame.sprite.Group()
         gl.background_sprites = pygame.sprite.Group()
         gl.lap_start_time = time.time()
         Road.reset_road()
+        #if not gl.singleplayer:
+            #gl.client.start_game()
         self.game_loop()
 
-    # Loop des Spiels: Erstellt Spieler und Hintergrund, nimmt Inputs entgegen und ruft permanent die render- und
-    # update-Methode auf
     def game_loop(self):
+        """Loop des Spiels: Erstellt Spieler und Hintergrund, nimmt Inputs entgegen und ruft permanent die render- und
+        update-Methode auf"""
         Sprites.create_player()
         Sprites.create_background()
+        Sprites.create_bots()
         gl.background_sprites.draw(gl.screen)
+        # Sprites.create_server_cars()
 
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    if gl.client.sio.connected:
+                        gl.client.disconnect()
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
@@ -49,15 +55,6 @@ class Game:
                     if event.key == pygame.K_DOWN:
                         gl.keySlower = True
 
-                    if event.key == pygame.K_a:
-                        gl.keyA = True
-                    if event.key == pygame.K_d:
-                        gl.keyD = True
-                    if event.key == pygame.K_w:
-                        gl.keyW = True
-                    if event.key == pygame.K_s:
-                        gl.keyS = True
-
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         gl.keyLeft = False
@@ -68,24 +65,15 @@ class Game:
                     if event.key == pygame.K_DOWN:
                         gl.keySlower = False
 
-                    if event.key == pygame.K_a:
-                        gl.keyA = False
-                    if event.key == pygame.K_d:
-                        gl.keyD = False
-                    if event.key == pygame.K_w:
-                        gl.keyW = False
-                    if event.key == pygame.K_s:
-                        gl.keyS = False
-
             Render.render()
             self.update(gl.STEP)
             pygame.display.flip()
             gl.clock.tick(gl.FPS)
 
-    # Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert
     @staticmethod
     def update(dt):
-
+        """Hier wird anhand der Nutzereingaben die Steuerung des Autos geaendert; Zeit- und NPC-Aktualisierung
+        geschieht hier ebenfalls"""
         start_position = gl.position  # Position zum Start der Methode, nicht generelle 1. Position
         current_segment = Util.which_segment(gl.position + gl.playerZ)
         tilt = dt * 2 * (gl.speed / gl.maxSpeed)
@@ -95,14 +83,8 @@ class Game:
 
         if gl.keyLeft:
             gl.playerX = gl.playerX - tilt
-            if gl.speed > 0:
-                gl.player.drive_left()
         elif gl.keyRight:
             gl.playerX = gl.playerX + tilt
-            if gl.speed > 0:
-                gl.player.drive_right()
-        else:
-            gl.player.drive_straight()
 
         gl.playerX -= tilt * (gl.speed / gl.maxSpeed) * current_segment.get("curve") * gl.centrifugal
 
@@ -123,6 +105,10 @@ class Game:
 
         gl.playerX = Util.limit(gl.playerX, -2, 2)
         gl.speed = Util.limit(gl.speed, 0, gl.maxSpeed)
+
+        # Sendet Spieler-Daten an den Server, falls Multiplayer aktiv
+        if gl.singleplayer is False:
+            gl.client.ingame_pos(1, gl.playerZ + gl.position, gl.playerX)
 
         Util.check_time(start_position)  # Ueberprueft und Updatet die Zeit ueber Util
         Util.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)

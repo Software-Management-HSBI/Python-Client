@@ -73,10 +73,12 @@ class Render:
             Render.render_sprites(segment)
             Render.render_cars(segment)
 
+        Render.render_player(current_segment)
         gl.player_sprites.draw(gl.screen)
 
     @staticmethod
     def render_cars(segment):
+        """Stellt die NPC-Autos dar"""
         for i in range(len(segment.get("cars"))):
             car = segment.get("cars")[i]
             sprite = car.get("sprite")
@@ -97,6 +99,7 @@ class Render:
 
     @staticmethod
     def render_sprites(segment):
+        """Stellt die Objekte am Rand der Strasse dar"""
         for i in range(len(segment.get("sprites"))):
             sprite = segment.get("sprites")[i]
             sprite_scale = segment.get("p1").get("screen").get("scale")
@@ -111,3 +114,26 @@ class Render:
 
             Util.sprite(gl.screen, gl.width, gl.roadWidth, sprite.get("source"), sprite_scale, sprite_x, sprite_y,
                         offset, -1, segment.get("clip"))
+
+    @staticmethod
+    def render_player(segment):
+        """Stellt den Spieler dar und veraendert sein Modell, falls er lenkt oder einen Huegel hochfaehrt"""
+        uphill = segment.get("p2").get("world").get("y") - segment.get("p1").get("world").get("y")
+        bounce = (segment.get("index") % 3) * 1.5
+        if gl.keyLeft:
+            if uphill > 0:
+                gl.player.drive_left(True)
+            else:
+                gl.player.drive_left(False)
+        elif gl.keyRight:
+            if uphill > 0:
+                gl.player.drive_right(True)
+            else:
+                gl.player.drive_right(False)
+        else:
+            if uphill > 0:
+                gl.player.drive_straight(True)
+            else:
+                gl.player.drive_straight(False)
+        gl.player.bounce(bounce)
+        gl.player_sprites.draw(gl.screen)

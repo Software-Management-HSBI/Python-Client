@@ -6,14 +6,13 @@ from Visuals.spriteCreation import Sprites
 
 class Road:
 
-    # Liest das Strassen-Array aus und markiert Start-/Ziellinie
     @staticmethod
     def reset_road():
-
+        """Liest das Strassen-Array aus und markiert Start-/Ziellinie"""
         gl.segments = []
 
         Road.read_road()
-        Sprites.create_bots()
+        #Sprites.create_bots()
         Sprites.create_obstacles(gl.segments)
 
         gl.segments[Util.which_segment(gl.playerZ)["index"] + 2]["color"] = Colors.get_start()
@@ -23,9 +22,9 @@ class Road:
 
         gl.trackLength = len(gl.segments) * gl.segmentLength
 
-    # Hier wird das hinzuzufuegende Segment anhand von Kurven- und Huegel-Parametern angepasst
     @staticmethod
     def add_segment(curve, y):
+        """Hier wird das hinzuzufuegende Segment anhand von Kurven- und Huegel-Parametern angepasst"""
         n = len(gl.segments)
         gl.segments.append(
             {
@@ -72,9 +71,9 @@ class Road:
             }
         )
 
-    # Fuegt Strassenteile an das Segment-Array hinzu
     @staticmethod
     def add_road(enter, hold, leave, curve, y=0):
+        """Fuegt Strassenteile an das Segment-Array hinzu"""
         startY = Road.lastY()
         endY = startY + (int(y) * gl.segmentLength)
         total = int(enter) + int(hold) + int(leave)
@@ -89,9 +88,9 @@ class Road:
             Road.add_segment(Util.easeInOut(0, curve, n / enter),
                              Util.easeInOut(startY, endY, (enter + hold + n) / total))
 
-    # Ueberprueft, ob Werte des Straßenmoduls leer ist
     @staticmethod
     def add_street(num=None, curve=None, height=None):
+        """Ueberprueft, ob Werte des Straßenmoduls leer ist"""
         if num is None:
             num = Road.length().get("medium")
         if curve is None:
@@ -101,24 +100,25 @@ class Road:
 
         Road.add_road(num, num, num, curve, height)
 
-    # Gibt die letzte Y-Koordinate aus, um einen glatten Huegel zu modellieren
     @staticmethod
     def lastY():
+        """Gibt die letzte Y-Koordinate aus, um einen glatten Huegel zu modellieren"""
         if len(gl.segments) == 0:
             return 0
         return gl.segments[len(gl.segments) - 1].get("p2").get("world").get("y")
 
-    # Hilfsmethode, um zu gucken, welche Farbe das aktuelle Strassenstueck haben muss
     @staticmethod
     def which_road(n):
+        """Hilfsmethode, um zu gucken, welche Farbe das aktuelle Strassenstueck haben muss"""
         if (n / gl.rumbleLength) % 2 == 0:
             return Colors.get_light()
         else:
             return Colors.get_dark()
 
-    # Liest das Strassen-Array aus und entscheidet je nach Menge an Werten, ob Kurven oder Huegel zum Segment gehoeren
     @staticmethod
     def read_road():
+        """Liest das Strassen-Array aus und entscheidet je nach Menge an Werten,
+         ob Kurven oder Huegel zum Segment gehoeren"""
         for x in gl.road:
             if len(x) == 1:
                 Road.add_street(x[0])
