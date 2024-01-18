@@ -35,7 +35,7 @@ class Game:
         Sprites.create_background()
         Sprites.create_bots()
         gl.background_sprites.draw(gl.screen)
-        #Sprites.create_server_cars()
+        # Sprites.create_server_cars()
 
         while True:
             for event in pygame.event.get():
@@ -108,7 +108,7 @@ class Game:
 
         # Sendet Spieler-Daten an den Server, falls Multiplayer aktiv
         if gl.singleplayer is False:
-            gl.client.ingame_pos(gl.playerZ + gl.position, gl.playerX)
+            gl.client.ingame_pos(1, gl.playerZ + gl.position, gl.playerX)
 
         Util.check_time(start_position)  # Ueberprueft und Updatet die Zeit ueber Util
         Util.update_time(gl.current_lap_time, gl.last_lap_time, gl.best_lap_time)

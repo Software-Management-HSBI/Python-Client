@@ -32,7 +32,7 @@ class Sprites:
     @staticmethod
     def create_obstacles(segments):
         """Erstellt Trees und Billboards in zufaelligen Abstaenden"""
-        for i in range(0, len(segments), random.choice([50, 75, 100, 125])):
+        for i in range(0, len(segments), random.choice([25, 35, 45, 55])):
             direction = random.choice([1, -1])
             Sprites.add_sprite(segments, i, Sprite.create_tree(), direction)
             Sprites.add_sprite(segments, i, Sprite.create_billboard(), -direction)

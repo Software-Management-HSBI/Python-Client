@@ -43,8 +43,6 @@ class Lobby:
                     for button in self.player_buttons:
                         if button.rect.collidepoint(event.pos):
                             if not ready:
-                                # TODO: Hier kommt dann der Bereitschaftscheck hin,
-                                #  maybe eine Methode vom Server die das macht?
                                 button.color = Colors.GREEN
                                 button.hover_color = Colors.LIGHT_GREEN
                                 gl.client.ready()
